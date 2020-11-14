@@ -19,8 +19,6 @@ The message history is logged in a database (SQLite) in order to be able to mana
 - [Starter Guide](#starter-guide)
   - [Quick configuration](#quick-configuration)
   - [First requests](#first-requests)
-  - [Working with files](#working-with-files)
-- [Available Methods](#available-methods)
 - [Contributors](#contributors)
 - [FAQ](#faq)
 - [Donations](#donations)
@@ -98,7 +96,7 @@ My pricing is **100$/hour**. I accept PayPal. To request a paid support write me
 
 # License
 
-# Base on TLSharp from sochix https://github.com/sochix/TLSharp
+Created from the TLSharp library of sochix https://github.com/sochix/TLSharp
 
 **Please, provide link to an author when you using library**
 
