@@ -33,6 +33,8 @@ namespace TelegramCSharpForward
         private static TLAbsDialogs TLAbsDialogs = null;
         // RealChanId
         private static int MyChanId = 0;
+        // ChanIdForDev
+        //private static int MyChanId = 0;
 
         // Offset Indice
         private static double DowJonesOffset = -83.91;
@@ -327,12 +329,6 @@ namespace TelegramCSharpForward
             Regex regexp = new Regex("([0-9]{2} [0-9]{3})|([0-9]{5})");
             if (message.ToLower().Contains("dax30") || message.ToLower().Contains("dax"))
             {
-                string firstPartOfMessage = null;
-                if (message.ToLower().Contains("dax30"))
-                {
-                    firstPartOfMessage = message.Substring(0, message.LastIndexOf("dax") + 5);
-                    message = message.Substring(message.LastIndexOf("dax30") + 6); 
-                }
                 MatchCollection matchCollection = regexp.Matches(message);
                 if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
                 {
@@ -341,19 +337,9 @@ namespace TelegramCSharpForward
                         message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + DaxOffset).ToString());
                     }
                 }
-                if (firstPartOfMessage != null)
-                {
-                    message = firstPartOfMessage + " " + message;
-                }
             }
             else if (message.ToLower().Contains("dj30") || message.ToLower().Contains("dowjones"))
             {
-                string firstPartOfMessage = null;
-                if (message.ToLower().Contains("dj30"))
-                {
-                    firstPartOfMessage = message.Substring(0, message.LastIndexOf("dj") + 4);
-                    message = message.Substring(message.LastIndexOf("dj30") + 5);
-                }
                 MatchCollection matchCollection = regexp.Matches(message);
                 if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
                 {
@@ -361,10 +347,6 @@ namespace TelegramCSharpForward
                     {
                         message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + DowJonesOffset).ToString());
                     }
-                }
-                if (firstPartOfMessage != null)
-                {
-                    message = firstPartOfMessage + " " + message;
                 }
             }
             else if (message.ToLower().Contains("nasdaq"))
