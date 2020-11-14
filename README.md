@@ -3,7 +3,7 @@ TelegramCSharpForward
 
 _Unofficial_ Telegram (http://telegram.org) client library implemented in C#.
 
-This Program which allows you to <b>redirect all the channels you want to a particular channel</b>.
+This Program allows you to <b>redirect all channels you want to an unique channel</b>.
 
 This has been designed to be able to correct the price differences between Axitrader and Vantage / FXCM brokers but in the end it is a simple "CalculOffset (...)" function that you can delete if you are not interested.
 
