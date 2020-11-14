@@ -80,16 +80,22 @@ The SQLite database which will be created on the first launch with an error mess
 Without information listen above your issue will be closed. 
 
 # Donations
-Thanks for donations! It's highly appreciated. 
 <a href="https://www.paypal.com/donate?hosted_button_id=QZWT9BW3BDEY2" title="Support project"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif"></a>
 
-List of donators:
-* 
+Thanks for donations! 
+
+It's highly appreciated. 
+
+### List of donators: 
 
 # Support
-If you have troubles while using TLSharp, I can help you for an additional fee. 
+If you have troubles while using TelegramCSharpForward, I can help you for an additional fee. 
 
-My pricing is **100$/hour**. I accept PayPal. To request a paid support write me at Telegram https://t.me/Cobra91310, start your message with phrase [PAID SUPPORT].
+My pricing is **50$/hour**. 
+
+I accept PayPal.
+
+To request a paid support write me at Telegram https://t.me/Cobra91310, start your message with phrase [PAID SUPPORT].
 
 # Contributors
 * 
