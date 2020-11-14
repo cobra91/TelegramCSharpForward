@@ -89,7 +89,7 @@ List of donators:
 # Support
 If you have troubles while using TLSharp, I can help you for an additional fee. 
 
-My pricing is **100$/hour**. I accept PayPal. To request a paid support write me at Telegram @Cobra91310, start your message with phrase [PAID SUPPORT].
+My pricing is **100$/hour**. I accept PayPal. To request a paid support write me at Telegram https://t.me/Cobra91310, start your message with phrase [PAID SUPPORT].
 
 # Contributors
 * 
