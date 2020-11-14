@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <StartupObject>TelegramCSharpForward.Program</StartupObject>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Copyright>LECOMTE Damien</Copyright>
+    <PackageProjectUrl>https://github.com/cobra91/TelegramCSharpForward</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/cobra91/TelegramCSharpForward</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccessLibrary\DataAccessLibrary.csproj" />
+    <ProjectReference Include="..\TeleSharp.TL\TeleSharp.TL.csproj" />
+    <ProjectReference Include="..\TLSharp.Core\TLSharp.Core.csproj" />
+  </ItemGroup>
+
+</Project>

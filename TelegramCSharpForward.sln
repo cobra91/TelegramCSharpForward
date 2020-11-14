@@ -1,0 +1,83 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TLSharp.Core", "TLSharp.Core\TLSharp.Core.csproj", "{400D2544-1CC6-4D8A-A62C-2292D9947A16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TeleSharp.TL", "TeleSharp.TL\TeleSharp.TL.csproj", "{D6144517-91D2-4880-86DF-E9FF5D7F383A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BA166454-30CA-4EE7-B5A3-022D3720205E}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLibrary", "DataAccessLibrary\DataAccessLibrary.csproj", "{6AB51CFF-14C6-451C-99BD-2785F0CFD5C6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TelegramCSharpForward", "TelegramCSharpForward\TelegramCSharpForward.csproj", "{FE23C94A-C8EA-4576-84B4-E6EE40FBF1FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{400D2544-1CC6-4D8A-A62C-2292D9947A16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{400D2544-1CC6-4D8A-A62C-2292D9947A16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{400D2544-1CC6-4D8A-A62C-2292D9947A16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{400D2544-1CC6-4D8A-A62C-2292D9947A16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6144517-91D2-4880-86DF-E9FF5D7F383A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6144517-91D2-4880-86DF-E9FF5D7F383A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6144517-91D2-4880-86DF-E9FF5D7F383A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6144517-91D2-4880-86DF-E9FF5D7F383A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6AB51CFF-14C6-451C-99BD-2785F0CFD5C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6AB51CFF-14C6-451C-99BD-2785F0CFD5C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6AB51CFF-14C6-451C-99BD-2785F0CFD5C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6AB51CFF-14C6-451C-99BD-2785F0CFD5C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE23C94A-C8EA-4576-84B4-E6EE40FBF1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE23C94A-C8EA-4576-84B4-E6EE40FBF1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE23C94A-C8EA-4576-84B4-E6EE40FBF1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE23C94A-C8EA-4576-84B4-E6EE40FBF1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F8F56A5-9F4B-4FE1-AB19-F87BD29C18F0}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.inheritsSet = VisualStudio
+		$1.inheritsScope = text/plain
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.IndentSwitchBody = True
+		$2.IndentBlocksInsideExpressions = True
+		$2.AnonymousMethodBraceStyle = NextLine
+		$2.PropertyBraceStyle = NextLine
+		$2.PropertyGetBraceStyle = NextLine
+		$2.PropertySetBraceStyle = NextLine
+		$2.EventBraceStyle = NextLine
+		$2.EventAddBraceStyle = NextLine
+		$2.EventRemoveBraceStyle = NextLine
+		$2.StatementBraceStyle = NextLine
+		$2.ElseNewLinePlacement = NewLine
+		$2.CatchNewLinePlacement = NewLine
+		$2.FinallyNewLinePlacement = NewLine
+		$2.WhileNewLinePlacement = DoNotCare
+		$2.ArrayInitializerWrapping = DoNotChange
+		$2.ArrayInitializerBraceStyle = NextLine
+		$2.BeforeMethodDeclarationParentheses = False
+		$2.BeforeMethodCallParentheses = False
+		$2.BeforeConstructorDeclarationParentheses = False
+		$2.NewLineBeforeConstructorInitializerColon = NewLine
+		$2.NewLineAfterConstructorInitializerColon = SameLine
+		$2.BeforeDelegateDeclarationParentheses = False
+		$2.NewParentheses = False
+		$2.SpacesBeforeBrackets = False
+		$2.inheritsSet = Mono
+		$2.inheritsScope = text/x-csharp
+		$2.scope = text/x-csharp
+	EndGlobalSection
+EndGlobal
