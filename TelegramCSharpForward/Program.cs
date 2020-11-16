@@ -415,22 +415,29 @@ namespace TelegramCSharpForward
                         Console.WriteLine($"REPLY{message.Text}\n{tLAbsMessage.Message}");
                         DataAccess.AddMessageData(tLAbsMessage.Id, channel.ChannelId, tLAbsMessage.Message);
                         TLChannelMessages historyFromMyNewCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash });
-                        List<TLAbsMessage> tLAbsMessages = (List<TLAbsMessage>)historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                        List<TLAbsMessage> tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text)).ToList();
                         if(tLAbsMessages.Count == 0 || tLAbsMessages.Count > 1)
                         {
                             throw new Exception("Multiple message found for Reply to unique Message");
                         }
                         else
                         {
-                            TLMessage tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
-                            TLRequestSendMessage send = new TLRequestSendMessage
+                            TLMessage tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                            if (tLMessageInNewchan != null)
                             {
-                                Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
-                                Message = tLAbsMessage.Message,
-                                ReplyToMsgId = tLMessageInNewchan.Id,
-                                RandomId = Helpers.GenerateRandomLong(),
-                            };
-                            await Client.SendRequestAsync<TLUpdates>(send);
+                                TLRequestSendMessage send = new TLRequestSendMessage
+                                {
+                                    Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
+                                    Message = tLAbsMessage.Message,
+                                    ReplyToMsgId = tLMessageInNewchan.Id,
+                                    RandomId = Helpers.GenerateRandomLong(),
+                                };
+                                await Client.SendRequestAsync<TLUpdates>(send);
+                            }
+                            else
+                            {
+                                throw new Exception("Original Message not found to Reply");
+                            }
                         }                        
                     }
                     else
