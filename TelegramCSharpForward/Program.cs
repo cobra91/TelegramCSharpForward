@@ -403,8 +403,8 @@ namespace TelegramCSharpForward
                 {
                     Console.WriteLine($"New Reply from channel {ChannelId[channel.ChannelId][0]} Message {tLAbsMessage.Message} to message {tLAbsMessage.ReplyToMsgId}");
                     Message message = DataAccess.GetMessageDataById(tLAbsMessage.ReplyToMsgId.Value);
-                    TLChannelMessages rest = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = channel.ChannelId, AccessHash = (long)ChannelId[channel.ChannelId][1] });
-                    TLMessage tLMessage = (TLMessage)rest.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Id == tLAbsMessage.ReplyToMsgId);
+                    TLChannelMessages historyFromSourceCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = channel.ChannelId, AccessHash = (long)ChannelId[channel.ChannelId][1] });
+                    TLMessage tLMessage = (TLMessage)historyFromSourceCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Id == tLAbsMessage.ReplyToMsgId);
                     if (message != null)
                     {
                         if (tLMessage != null && tLMessage.Message != message.Text)
@@ -414,15 +414,15 @@ namespace TelegramCSharpForward
                         }
                         Console.WriteLine($"REPLY{message.Text}\n{tLAbsMessage.Message}");
                         DataAccess.AddMessageData(tLAbsMessage.Id, channel.ChannelId, tLAbsMessage.Message);
-                        rest = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash });
-                        List<TLAbsMessage> tLAbsMessages = (List<TLAbsMessage>)rest.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                        TLChannelMessages historyFromMyNewCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash });
+                        List<TLAbsMessage> tLAbsMessages = (List<TLAbsMessage>)historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
                         if(tLAbsMessages.Count == 0 || tLAbsMessages.Count > 1)
                         {
                             throw new Exception("Multiple message found for Reply to unique Message");
                         }
                         else
                         {
-                            TLMessage tLMessageInNewchan = (TLMessage)rest.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                            TLMessage tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
                             TLRequestSendMessage send = new TLRequestSendMessage
                             {
                                 Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
