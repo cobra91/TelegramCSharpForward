@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Contacts
 {
     [TLObject(1891070632)]
@@ -30,9 +24,9 @@ namespace TeleSharp.TL.Contacts
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Categories = (TLVector<TLTopPeerCategoryPeers>)ObjectUtils.DeserializeVector<TLTopPeerCategoryPeers>(br);
-            Chats = (TLVector<TLAbsChat>)ObjectUtils.DeserializeVector<TLAbsChat>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Categories = ObjectUtils.DeserializeVector<TLTopPeerCategoryPeers>(br);
+            Chats = ObjectUtils.DeserializeVector<TLAbsChat>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
 

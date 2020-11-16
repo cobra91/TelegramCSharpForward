@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(-346119674)]
@@ -45,7 +39,7 @@ namespace TeleSharp.TL.Messages
             Gallery = (Flags & 1) != 0;
             Private = (Flags & 2) != 0;
             QueryId = br.ReadInt64();
-            Results = (TLVector<TLAbsInputBotInlineResult>)ObjectUtils.DeserializeVector<TLAbsInputBotInlineResult>(br);
+            Results = ObjectUtils.DeserializeVector<TLAbsInputBotInlineResult>(br);
             CacheTime = br.ReadInt32();
             if ((Flags & 4) != 0)
             {

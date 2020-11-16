@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Contacts
 {
     [TLObject(-2065352905)]
@@ -38,7 +32,7 @@ namespace TeleSharp.TL.Contacts
         }
         public override void DeserializeResponse(BinaryReader br)
         {
-            Response = (TLVector<int>)ObjectUtils.DeserializeVector<int>(br);
+            Response = ObjectUtils.DeserializeVector<int>(br);
 
         }
     }

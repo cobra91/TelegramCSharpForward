@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(-858565059)]
@@ -59,7 +53,7 @@ namespace TeleSharp.TL.Messages
                 SwitchPm = null;
             }
 
-            Results = (TLVector<TLAbsBotInlineResult>)ObjectUtils.DeserializeVector<TLAbsBotInlineResult>(br);
+            Results = ObjectUtils.DeserializeVector<TLAbsBotInlineResult>(br);
             CacheTime = br.ReadInt32();
 
         }

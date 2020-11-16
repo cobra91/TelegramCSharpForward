@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-1660057)]
@@ -47,7 +41,7 @@ namespace TeleSharp.TL
             KeyFingerprint = br.ReadInt64();
             Protocol = (TLPhoneCallProtocol)ObjectUtils.DeserializeObject(br);
             Connection = (TLPhoneConnection)ObjectUtils.DeserializeObject(br);
-            AlternativeConnections = (TLVector<TLPhoneConnection>)ObjectUtils.DeserializeVector<TLPhoneConnection>(br);
+            AlternativeConnections = ObjectUtils.DeserializeVector<TLPhoneConnection>(br);
             StartDate = br.ReadInt32();
 
         }

@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-847783593)]
@@ -34,7 +28,7 @@ namespace TeleSharp.TL
         {
             Flags = br.ReadInt32();
             ExcludeNewMessages = (Flags & 2) != 0;
-            Ranges = (TLVector<TLMessageRange>)ObjectUtils.DeserializeVector<TLMessageRange>(br);
+            Ranges = ObjectUtils.DeserializeVector<TLMessageRange>(br);
 
         }
 

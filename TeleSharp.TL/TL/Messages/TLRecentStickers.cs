@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(1558317424)]
@@ -30,7 +24,7 @@ namespace TeleSharp.TL.Messages
         public override void DeserializeBody(BinaryReader br)
         {
             Hash = br.ReadInt32();
-            Stickers = (TLVector<TLAbsDocument>)ObjectUtils.DeserializeVector<TLAbsDocument>(br);
+            Stickers = ObjectUtils.DeserializeVector<TLAbsDocument>(br);
 
         }
 

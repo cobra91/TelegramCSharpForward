@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-882895228)]
@@ -67,7 +61,7 @@ namespace TeleSharp.TL
             Expires = br.ReadInt32();
             TestMode = BoolUtil.Deserialize(br);
             ThisDc = br.ReadInt32();
-            DcOptions = (TLVector<TLDcOption>)ObjectUtils.DeserializeVector<TLDcOption>(br);
+            DcOptions = ObjectUtils.DeserializeVector<TLDcOption>(br);
             ChatSizeMax = br.ReadInt32();
             MegagroupSizeMax = br.ReadInt32();
             ForwardedCountMax = br.ReadInt32();
@@ -99,7 +93,7 @@ namespace TeleSharp.TL
             CallConnectTimeoutMs = br.ReadInt32();
             CallPacketTimeoutMs = br.ReadInt32();
             MeUrlPrefix = StringUtil.Deserialize(br);
-            DisabledFeatures = (TLVector<TLDisabledFeature>)ObjectUtils.DeserializeVector<TLDisabledFeature>(br);
+            DisabledFeatures = ObjectUtils.DeserializeVector<TLDisabledFeature>(br);
 
         }
 

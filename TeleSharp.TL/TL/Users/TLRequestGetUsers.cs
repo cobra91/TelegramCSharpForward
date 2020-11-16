@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Users
 {
     [TLObject(227648840)]
@@ -29,7 +23,7 @@ namespace TeleSharp.TL.Users
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Id = (TLVector<TLAbsInputUser>)ObjectUtils.DeserializeVector<TLAbsInputUser>(br);
+            Id = ObjectUtils.DeserializeVector<TLAbsInputUser>(br);
 
         }
 
@@ -41,7 +35,7 @@ namespace TeleSharp.TL.Users
         }
         public override void DeserializeResponse(BinaryReader br)
         {
-            Response = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Response = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
     }

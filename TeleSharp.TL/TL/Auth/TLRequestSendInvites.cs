@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Auth
 {
     [TLObject(1998331287)]
@@ -30,7 +24,7 @@ namespace TeleSharp.TL.Auth
 
         public override void DeserializeBody(BinaryReader br)
         {
-            PhoneNumbers = (TLVector<string>)ObjectUtils.DeserializeVector<string>(br);
+            PhoneNumbers = ObjectUtils.DeserializeVector<string>(br);
             Message = StringUtil.Deserialize(br);
 
         }

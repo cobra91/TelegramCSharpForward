@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(-993483427)]
@@ -32,7 +26,7 @@ namespace TeleSharp.TL.Messages
         public override void DeserializeBody(BinaryReader br)
         {
             Peer = (TLAbsInputPeer)ObjectUtils.DeserializeObject(br);
-            Id = (TLVector<int>)ObjectUtils.DeserializeVector<int>(br);
+            Id = ObjectUtils.DeserializeVector<int>(br);
             Increment = BoolUtil.Deserialize(br);
 
         }
@@ -47,7 +41,7 @@ namespace TeleSharp.TL.Messages
         }
         public override void DeserializeResponse(BinaryReader br)
         {
-            Response = (TLVector<int>)ObjectUtils.DeserializeVector<int>(br);
+            Response = ObjectUtils.DeserializeVector<int>(br);
 
         }
     }

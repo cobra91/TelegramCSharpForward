@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-613092008)]
@@ -52,7 +46,7 @@ namespace TeleSharp.TL
             ParticipantsCount = br.ReadInt32();
             if ((Flags & 16) != 0)
             {
-                Participants = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+                Participants = ObjectUtils.DeserializeVector<TLAbsUser>(br);
             }
             else
             {

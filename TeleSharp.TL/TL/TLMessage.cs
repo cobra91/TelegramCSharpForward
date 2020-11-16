@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-1063525281)]
@@ -127,7 +121,7 @@ namespace TeleSharp.TL
 
             if ((Flags & 128) != 0)
             {
-                Entities = (TLVector<TLAbsMessageEntity>)ObjectUtils.DeserializeVector<TLAbsMessageEntity>(br);
+                Entities = ObjectUtils.DeserializeVector<TLAbsMessageEntity>(br);
             }
             else
             {

@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(-341307408)]
@@ -29,7 +23,7 @@ namespace TeleSharp.TL.Messages
 
         public override void DeserializeBody(BinaryReader br)
         {
-            ExceptIds = (TLVector<int>)ObjectUtils.DeserializeVector<int>(br);
+            ExceptIds = ObjectUtils.DeserializeVector<int>(br);
 
         }
 

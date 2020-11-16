@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(1957577280)]
@@ -32,9 +26,9 @@ namespace TeleSharp.TL
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Updates = (TLVector<TLAbsUpdate>)ObjectUtils.DeserializeVector<TLAbsUpdate>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
-            Chats = (TLVector<TLAbsChat>)ObjectUtils.DeserializeVector<TLAbsChat>(br);
+            Updates = ObjectUtils.DeserializeVector<TLAbsUpdate>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Chats = ObjectUtils.DeserializeVector<TLAbsChat>(br);
             Date = br.ReadInt32();
             Seq = br.ReadInt32();
 

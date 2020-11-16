@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(-1707344487)]
@@ -29,8 +23,8 @@ namespace TeleSharp.TL.Messages
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Scores = (TLVector<TLHighScore>)ObjectUtils.DeserializeVector<TLHighScore>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Scores = ObjectUtils.DeserializeVector<TLHighScore>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
 

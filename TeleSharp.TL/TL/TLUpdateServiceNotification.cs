@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-337352679)]
@@ -51,7 +45,7 @@ namespace TeleSharp.TL
             Type = StringUtil.Deserialize(br);
             Message = StringUtil.Deserialize(br);
             Media = (TLAbsMessageMedia)ObjectUtils.DeserializeObject(br);
-            Entities = (TLVector<TLAbsMessageEntity>)ObjectUtils.DeserializeVector<TLAbsMessageEntity>(br);
+            Entities = ObjectUtils.DeserializeVector<TLAbsMessageEntity>(br);
 
         }
 

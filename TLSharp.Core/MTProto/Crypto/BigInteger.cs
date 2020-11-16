@@ -104,7 +104,7 @@ namespace TLSharp.Core.MTProto.Crypto
         private static readonly int[] primeProducts;
 
         private const long IMASK = 0xffffffffL;
-        private static readonly ulong UIMASK = (ulong)IMASK;
+        private static readonly ulong UIMASK = IMASK;
 
         private static readonly int[] ZeroMagnitude = new int[0];
         private static readonly byte[] ZeroEncoding = new byte[0];
@@ -642,7 +642,7 @@ namespace TLSharp.Core.MTProto.Crypto
 
             while (vI >= 0)
             {
-                m += ((long)(uint)a[tI] + (long)(uint)b[vI--]);
+                m += ((uint)a[tI] + (long)(uint)b[vI--]);
                 a[tI--] = (int)m;
                 m = (long)((ulong)m >> 32);
             }
@@ -1875,13 +1875,13 @@ namespace TLSharp.Core.MTProto.Crypto
 
             for (int i = x.Length - 1; i != 0; i--)
             {
-                ulong v = (ulong)(uint)x[i];
+                ulong v = (uint)x[i];
 
                 u1 = v * v;
                 u2 = u1 >> 32;
                 u1 = (uint)u1;
 
-                u1 += (ulong)(uint)w[wBase];
+                u1 += (uint)w[wBase];
 
                 w[wBase] = (int)(uint)u1;
                 c = u2 + (u1 >> 32);
@@ -1889,16 +1889,16 @@ namespace TLSharp.Core.MTProto.Crypto
                 for (int j = i - 1; j >= 0; j--)
                 {
                     --wBase;
-                    u1 = v * (ulong)(uint)x[j];
+                    u1 = v * (uint)x[j];
                     u2 = u1 >> 31; // multiply by 2!
                     u1 = (uint)(u1 << 1); // multiply by 2!
-                    u1 += c + (ulong)(uint)w[wBase];
+                    u1 += c + (uint)w[wBase];
 
                     w[wBase] = (int)(uint)u1;
                     c = u2 + (u1 >> 32);
                 }
 
-                c += (ulong)(uint)w[--wBase];
+                c += (uint)w[--wBase];
                 w[wBase] = (int)(uint)c;
 
                 if (--wBase >= 0)
@@ -1911,17 +1911,17 @@ namespace TLSharp.Core.MTProto.Crypto
                 wBase += i;
             }
 
-            u1 = (ulong)(uint)x[0];
+            u1 = (uint)x[0];
             u1 = u1 * u1;
             u2 = u1 >> 32;
             u1 = u1 & IMASK;
 
-            u1 += (ulong)(uint)w[wBase];
+            u1 += (uint)w[wBase];
 
             w[wBase] = (int)(uint)u1;
             if (--wBase >= 0)
             {
-                w[wBase] = (int)(uint)(u2 + (u1 >> 32) + (ulong)(uint)w[wBase]);
+                w[wBase] = (int)(uint)(u2 + (u1 >> 32) + (uint)w[wBase]);
             }
             else {
                 Debug.Assert((uint)(u2 + (u1 >> 32)) == 0);
@@ -2141,7 +2141,7 @@ namespace TLSharp.Core.MTProto.Crypto
             ulong mQuote)
         {
             ulong um = m;
-            ulong prod1 = (ulong)x * (ulong)y;
+            ulong prod1 = x * (ulong)y;
             ulong u = (prod1 * mQuote) & UIMASK;
             ulong prod2 = u * um;
             ulong tmp = (prod1 & UIMASK) + (prod2 & UIMASK);
@@ -3055,7 +3055,7 @@ namespace TLSharp.Core.MTProto.Crypto
                 }
             }
 
-            int word = (int)magnitude[w];
+            int word = magnitude[w];
             Debug.Assert(word != 0);
 
             int b = (word & 0x0000FFFF) == 0

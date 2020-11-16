@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Updates
 {
     [TLObject(-1459938943)]
@@ -33,11 +27,11 @@ namespace TeleSharp.TL.Updates
 
         public override void DeserializeBody(BinaryReader br)
         {
-            NewMessages = (TLVector<TLAbsMessage>)ObjectUtils.DeserializeVector<TLAbsMessage>(br);
-            NewEncryptedMessages = (TLVector<TLAbsEncryptedMessage>)ObjectUtils.DeserializeVector<TLAbsEncryptedMessage>(br);
-            OtherUpdates = (TLVector<TLAbsUpdate>)ObjectUtils.DeserializeVector<TLAbsUpdate>(br);
-            Chats = (TLVector<TLAbsChat>)ObjectUtils.DeserializeVector<TLAbsChat>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            NewMessages = ObjectUtils.DeserializeVector<TLAbsMessage>(br);
+            NewEncryptedMessages = ObjectUtils.DeserializeVector<TLAbsEncryptedMessage>(br);
+            OtherUpdates = ObjectUtils.DeserializeVector<TLAbsUpdate>(br);
+            Chats = ObjectUtils.DeserializeVector<TLAbsChat>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
             IntermediateState = (TLState)ObjectUtils.DeserializeObject(br);
 
         }

@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-2027738169)]
@@ -44,7 +38,7 @@ namespace TeleSharp.TL
             Thumb = (TLAbsPhotoSize)ObjectUtils.DeserializeObject(br);
             DcId = br.ReadInt32();
             Version = br.ReadInt32();
-            Attributes = (TLVector<TLAbsDocumentAttribute>)ObjectUtils.DeserializeVector<TLAbsDocumentAttribute>(br);
+            Attributes = ObjectUtils.DeserializeVector<TLAbsDocumentAttribute>(br);
 
         }
 

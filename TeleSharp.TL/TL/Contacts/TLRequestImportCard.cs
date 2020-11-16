@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Contacts
 {
     [TLObject(1340184318)]
@@ -29,7 +23,7 @@ namespace TeleSharp.TL.Contacts
 
         public override void DeserializeBody(BinaryReader br)
         {
-            ExportCard = (TLVector<int>)ObjectUtils.DeserializeVector<int>(br);
+            ExportCard = ObjectUtils.DeserializeVector<int>(br);
 
         }
 

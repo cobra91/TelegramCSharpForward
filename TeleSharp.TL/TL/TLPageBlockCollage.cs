@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(145955919)]
@@ -29,7 +23,7 @@ namespace TeleSharp.TL
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Items = (TLVector<TLAbsPageBlock>)ObjectUtils.DeserializeVector<TLAbsPageBlock>(br);
+            Items = ObjectUtils.DeserializeVector<TLAbsPageBlock>(br);
             Caption = (TLAbsRichText)ObjectUtils.DeserializeObject(br);
 
         }

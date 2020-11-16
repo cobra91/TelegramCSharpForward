@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Payments
 {
     [TLObject(1342771681)]
@@ -67,7 +61,7 @@ namespace TeleSharp.TL.Payments
             Currency = StringUtil.Deserialize(br);
             TotalAmount = br.ReadInt64();
             CredentialsTitle = StringUtil.Deserialize(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
 

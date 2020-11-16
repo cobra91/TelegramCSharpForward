@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-657787251)]
@@ -34,7 +28,7 @@ namespace TeleSharp.TL
             Flags = br.ReadInt32();
             if ((Flags & 1) != 0)
             {
-                Order = (TLVector<TLAbsPeer>)ObjectUtils.DeserializeVector<TLAbsPeer>(br);
+                Order = ObjectUtils.DeserializeVector<TLAbsPeer>(br);
             }
             else
             {

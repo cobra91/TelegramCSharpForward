@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Account
 {
     [TLObject(-906486552)]
@@ -31,7 +25,7 @@ namespace TeleSharp.TL.Account
         public override void DeserializeBody(BinaryReader br)
         {
             Key = (TLAbsInputPrivacyKey)ObjectUtils.DeserializeObject(br);
-            Rules = (TLVector<TLAbsInputPrivacyRule>)ObjectUtils.DeserializeVector<TLAbsInputPrivacyRule>(br);
+            Rules = ObjectUtils.DeserializeVector<TLAbsInputPrivacyRule>(br);
 
         }
 

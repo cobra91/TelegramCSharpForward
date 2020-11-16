@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(-1725551049)]
@@ -37,9 +31,9 @@ namespace TeleSharp.TL.Messages
             Flags = br.ReadInt32();
             Pts = br.ReadInt32();
             Count = br.ReadInt32();
-            Messages = (TLVector<TLAbsMessage>)ObjectUtils.DeserializeVector<TLAbsMessage>(br);
-            Chats = (TLVector<TLAbsChat>)ObjectUtils.DeserializeVector<TLAbsChat>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Messages = ObjectUtils.DeserializeVector<TLAbsMessage>(br);
+            Chats = ObjectUtils.DeserializeVector<TLAbsChat>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
 

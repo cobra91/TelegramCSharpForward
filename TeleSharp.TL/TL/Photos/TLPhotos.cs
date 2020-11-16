@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Photos
 {
     [TLObject(-1916114267)]
@@ -29,8 +23,8 @@ namespace TeleSharp.TL.Photos
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Photos = (TLVector<TLAbsPhoto>)ObjectUtils.DeserializeVector<TLAbsPhoto>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Photos = ObjectUtils.DeserializeVector<TLAbsPhoto>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
 

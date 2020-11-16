@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(1661770481)]
@@ -38,7 +32,7 @@ namespace TeleSharp.TL
             Caption = StringUtil.Deserialize(br);
             if ((Flags & 1) != 0)
             {
-                Stickers = (TLVector<TLAbsInputDocument>)ObjectUtils.DeserializeVector<TLAbsInputDocument>(br);
+                Stickers = ObjectUtils.DeserializeVector<TLAbsInputDocument>(br);
             }
             else
             {

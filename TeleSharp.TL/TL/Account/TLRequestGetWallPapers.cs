@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Account
 {
     [TLObject(-1068696894)]
@@ -38,7 +32,7 @@ namespace TeleSharp.TL.Account
         }
         public override void DeserializeResponse(BinaryReader br)
         {
-            Response = (TLVector<TLAbsWallPaper>)ObjectUtils.DeserializeVector<TLAbsWallPaper>(br);
+            Response = ObjectUtils.DeserializeVector<TLAbsWallPaper>(br);
 
         }
     }

@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-677274263)]
@@ -30,9 +24,9 @@ namespace TeleSharp.TL
 
         public override void DeserializeBody(BinaryReader br)
         {
-            Blocks = (TLVector<TLAbsPageBlock>)ObjectUtils.DeserializeVector<TLAbsPageBlock>(br);
-            Photos = (TLVector<TLAbsPhoto>)ObjectUtils.DeserializeVector<TLAbsPhoto>(br);
-            Videos = (TLVector<TLAbsDocument>)ObjectUtils.DeserializeVector<TLAbsDocument>(br);
+            Blocks = ObjectUtils.DeserializeVector<TLAbsPageBlock>(br);
+            Photos = ObjectUtils.DeserializeVector<TLAbsPhoto>(br);
+            Videos = ObjectUtils.DeserializeVector<TLAbsDocument>(br);
 
         }
 

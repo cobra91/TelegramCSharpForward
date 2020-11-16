@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Channels
 {
     [TLObject(-177282392)]
@@ -31,8 +25,8 @@ namespace TeleSharp.TL.Channels
         public override void DeserializeBody(BinaryReader br)
         {
             Count = br.ReadInt32();
-            Participants = (TLVector<TLAbsChannelParticipant>)ObjectUtils.DeserializeVector<TLAbsChannelParticipant>(br);
-            Users = (TLVector<TLAbsUser>)ObjectUtils.DeserializeVector<TLAbsUser>(br);
+            Participants = ObjectUtils.DeserializeVector<TLAbsChannelParticipant>(br);
+            Users = ObjectUtils.DeserializeVector<TLAbsUser>(br);
 
         }
 

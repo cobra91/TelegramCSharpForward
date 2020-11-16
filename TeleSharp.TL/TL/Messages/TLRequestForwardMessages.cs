@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Messages
 {
     [TLObject(1888354709)]
@@ -45,8 +39,8 @@ namespace TeleSharp.TL.Messages
             Background = (Flags & 64) != 0;
             WithMyScore = (Flags & 256) != 0;
             FromPeer = (TLAbsInputPeer)ObjectUtils.DeserializeObject(br);
-            Id = (TLVector<int>)ObjectUtils.DeserializeVector<int>(br);
-            RandomId = (TLVector<long>)ObjectUtils.DeserializeVector<long>(br);
+            Id = ObjectUtils.DeserializeVector<int>(br);
+            RandomId = ObjectUtils.DeserializeVector<long>(br);
             ToPeer = (TLAbsInputPeer)ObjectUtils.DeserializeObject(br);
 
         }

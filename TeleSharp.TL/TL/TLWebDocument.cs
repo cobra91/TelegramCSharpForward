@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-971322408)]
@@ -37,7 +31,7 @@ namespace TeleSharp.TL
             AccessHash = br.ReadInt64();
             Size = br.ReadInt32();
             MimeType = StringUtil.Deserialize(br);
-            Attributes = (TLVector<TLAbsDocumentAttribute>)ObjectUtils.DeserializeVector<TLAbsDocumentAttribute>(br);
+            Attributes = ObjectUtils.DeserializeVector<TLAbsDocumentAttribute>(br);
             DcId = br.ReadInt32();
 
         }

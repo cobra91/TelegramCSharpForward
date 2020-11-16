@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-797904407)]
@@ -38,11 +32,11 @@ namespace TeleSharp.TL
             Flags = br.ReadInt32();
             File = (TLAbsInputFile)ObjectUtils.DeserializeObject(br);
             MimeType = StringUtil.Deserialize(br);
-            Attributes = (TLVector<TLAbsDocumentAttribute>)ObjectUtils.DeserializeVector<TLAbsDocumentAttribute>(br);
+            Attributes = ObjectUtils.DeserializeVector<TLAbsDocumentAttribute>(br);
             Caption = StringUtil.Deserialize(br);
             if ((Flags & 1) != 0)
             {
-                Stickers = (TLVector<TLAbsInputDocument>)ObjectUtils.DeserializeVector<TLAbsInputDocument>(br);
+                Stickers = ObjectUtils.DeserializeVector<TLAbsInputDocument>(br);
             }
             else
             {

@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL.Payments
 {
     [TLObject(-784000893)]
@@ -45,7 +39,7 @@ namespace TeleSharp.TL.Payments
 
             if ((Flags & 2) != 0)
             {
-                ShippingOptions = (TLVector<TLShippingOption>)ObjectUtils.DeserializeVector<TLShippingOption>(br);
+                ShippingOptions = ObjectUtils.DeserializeVector<TLShippingOption>(br);
             }
             else
             {

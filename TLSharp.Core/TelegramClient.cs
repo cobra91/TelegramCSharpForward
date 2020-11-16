@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using TeleSharp.TL;
 using TeleSharp.TL.Account;
 using TeleSharp.TL.Auth;
@@ -12,12 +13,13 @@ using TeleSharp.TL.Contacts;
 using TeleSharp.TL.Help;
 using TeleSharp.TL.Messages;
 using TeleSharp.TL.Upload;
+
 using TLSharp.Core.Auth;
 using TLSharp.Core.Exceptions;
-using TLSharp.Core.MTProto.Crypto;
 using TLSharp.Core.Network;
 using TLSharp.Core.Network.Exceptions;
 using TLSharp.Core.Utils;
+
 using TLAuthorization = TeleSharp.TL.Auth.TLAuthorization;
 
 namespace TLSharp.Core

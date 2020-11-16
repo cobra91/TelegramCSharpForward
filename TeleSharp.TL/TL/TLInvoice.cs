@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TeleSharp.TL;
 namespace TeleSharp.TL
 {
     [TLObject(-1022713000)]
@@ -51,7 +45,7 @@ namespace TeleSharp.TL
             ShippingAddressRequested = (Flags & 16) != 0;
             Flexible = (Flags & 32) != 0;
             Currency = StringUtil.Deserialize(br);
-            Prices = (TLVector<TLLabeledPrice>)ObjectUtils.DeserializeVector<TLLabeledPrice>(br);
+            Prices = ObjectUtils.DeserializeVector<TLLabeledPrice>(br);
 
         }
 
