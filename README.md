@@ -3,9 +3,7 @@ TelegramCSharpForward
 
 _Unofficial_ Telegram (http://telegram.org) client library implemented in C#.
 
-It is an ideal solution for any developer who wants to send data directly to Telegram users or write their own custom Telegram client.
-
-There is a Program class which allows you to <b>redirect all the channels you want to a particular channel</b>.
+This Program allows you to <b>redirect all channels you want to an unique channel</b>.
 
 This has been designed to be able to correct the price differences between Axitrader and Vantage / FXCM brokers but in the end it is a simple "CalculOffset (...)" function that you can delete if you are not interested.
 
@@ -19,8 +17,6 @@ The message history is logged in a database (SQLite) in order to be able to mana
 - [Starter Guide](#starter-guide)
   - [Quick configuration](#quick-configuration)
   - [First requests](#first-requests)
-  - [Working with files](#working-with-files)
-- [Available Methods](#available-methods)
 - [Contributors](#contributors)
 - [FAQ](#faq)
 - [Donations](#donations)
@@ -82,23 +78,29 @@ The SQLite database which will be created on the first launch with an error mess
 Without information listen above your issue will be closed. 
 
 # Donations
-Thanks for donations! It's highly appreciated. 
 <a href="https://www.paypal.com/donate?hosted_button_id=QZWT9BW3BDEY2" title="Support project"><img src="https://www.paypalobjects.com/en_US/FR/i/btn/btn_donateCC_LG.gif"></a>
 
-List of donators:
-* 
+Thanks for donations! 
+
+It's highly appreciated. 
+
+### List of donators: 
 
 # Support
-If you have troubles while using TLSharp, I can help you for an additional fee. 
+If you have troubles while using TelegramCSharpForward, I can help you for an additional fee. 
 
-My pricing is **100$/hour**. I accept PayPal. To request a paid support write me at Telegram @Cobra91310, start your message with phrase [PAID SUPPORT].
+My pricing is **50$/hour**. 
+
+I accept PayPal.
+
+To request a paid support write me at Telegram https://t.me/Cobra91310, start your message with phrase [PAID SUPPORT].
 
 # Contributors
 * 
 
 # License
 
-# Base on TLSharp from sochix https://github.com/sochix/TLSharp
+Created from the TLSharp library of sochix https://github.com/sochix/TLSharp
 
 **Please, provide link to an author when you using library**
 
