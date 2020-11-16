@@ -224,7 +224,7 @@ namespace TelegramCSharpForward
             ChannelId = channelIdToKeep;
         }
 
-        private static async void OnMyTimedEvent(Object source, ElapsedEventArgs e)
+        private static async void OnMyTimedEvent(object source, ElapsedEventArgs e)
         {
             try
             {
@@ -414,7 +414,24 @@ namespace TelegramCSharpForward
                         }
                         Console.WriteLine($"REPLY{message.Text}\n{tLAbsMessage.Message}");
                         DataAccess.AddMessageData(tLAbsMessage.Id, channel.ChannelId, tLAbsMessage.Message);
-                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, $"Channel {ChannelId[channel.ChannelId][0]}\n{message.Text}\nREPLY \n{tLAbsMessage.Message}");
+                        rest = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash });
+                        List<TLAbsMessage> tLAbsMessages = (List<TLAbsMessage>)rest.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                        if(tLAbsMessages.Count == 0 || tLAbsMessages.Count > 1)
+                        {
+                            throw new Exception("Multiple message found for Reply to unique Message");
+                        }
+                        else
+                        {
+                            TLMessage tLMessageInNewchan = (TLMessage)rest.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                            TLRequestSendMessage send = new TLRequestSendMessage
+                            {
+                                Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
+                                Message = tLAbsMessage.Message,
+                                ReplyToMsgId = tLMessageInNewchan.Id,
+                                RandomId = Helpers.GenerateRandomLong(),
+                            };
+                            await Client.SendRequestAsync<TLUpdates>(send);
+                        }                        
                     }
                     else
                     {
