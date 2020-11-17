@@ -47,6 +47,7 @@ To start work, edit the file app.config
     <appSettings>
         <add key="apidId" value="YourApiId" />
         <add key="ApiHash" value="YourApiHash" />
+        <add key="SessionName" value="yourSessionName" />
         <add key="PhoneNumber" value="YourPhoneNumberWithAreaCode" />
         <add key="myChanId" value="YourChanIdToRedirectAllMessage" />
     </appSettings>
