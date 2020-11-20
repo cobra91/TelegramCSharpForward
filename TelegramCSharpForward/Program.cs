@@ -225,101 +225,69 @@ namespace TelegramCSharpForward
                         TLAbsDialogs = await Client.GetUserDialogsAsync();
                         foreach (TLAbsMessage tLAbsMessage in ((TLDialogs)TLAbsDialogs).Messages.Where(x => x is TLMessage message && TimeUnixTOWindows(message.Date, true) >= nowDateTime.AddMilliseconds(-(TimerIntervalInMs - 1))))
                         {
-                            ((TLMessage)tLAbsMessage).Message = CalculOffset(((TLMessage)tLAbsMessage).Message);
-                            if (((TLMessage)tLAbsMessage).ToId is TLPeerUser tLPeerUser)
+                            if (FilterMessage(((TLMessage)tLAbsMessage).Message) != null)
                             {
-                                // Personal Chat Do Not Forward!
-                            }
-                            else if (((TLMessage)tLAbsMessage).ToId is TLPeerChannel channel0 && ((TLMessage)tLAbsMessage).ReplyToMsgId != null)
-                            {
-                                int crtChannelId = channel0.ChannelId;
-                                if (crtChannelId != MyChanId && ChannelId.ContainsKey(crtChannelId))
+                                ((TLMessage)tLAbsMessage).Message = CalculOffset(((TLMessage)tLAbsMessage).Message);
+                                if (((TLMessage)tLAbsMessage).ToId is TLPeerUser tLPeerUser)
                                 {
-                                    Console.WriteLine("ReplyChannelId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
+                                    // Personal Chat Do Not Forward!
+                                }
+                                else if (((TLMessage)tLAbsMessage).ToId is TLPeerChannel channel0 && ((TLMessage)tLAbsMessage).ReplyToMsgId != null)
+                                {
+                                    int crtChannelId = channel0.ChannelId;
+                                    if (crtChannelId != MyChanId && ChannelId.ContainsKey(crtChannelId))
+                                    {
+                                        Console.WriteLine("ReplyChannelId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
+                                        await ReplyMessage((TLMessage)tLAbsMessage);
+                                    }
+                                }
+                                else if (((TLMessage)tLAbsMessage).ToId is TLPeerChat chat && ((TLMessage)tLAbsMessage).ReplyToMsgId != null)
+                                {
+                                    Console.WriteLine("ReplyChatId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
                                     await ReplyMessage((TLMessage)tLAbsMessage);
                                 }
-                            }
-                            else if (((TLMessage)tLAbsMessage).ToId is TLPeerChat chat && ((TLMessage)tLAbsMessage).ReplyToMsgId != null)
-                            {
-                                Console.WriteLine("ReplyChatId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
-                                await ReplyMessage((TLMessage)tLAbsMessage);
-                            }
-                            else if (((TLMessage)tLAbsMessage).ToId is TLPeerChannel channel && ((TLMessage)tLAbsMessage).ReplyToMsgId == null)
-                            {
-                                int crtChannelId = channel.ChannelId;
-                                if (crtChannelId != MyChanId && ChannelId.ContainsKey(crtChannelId))
+                                else if (((TLMessage)tLAbsMessage).ToId is TLPeerChannel channel && ((TLMessage)tLAbsMessage).ReplyToMsgId == null)
                                 {
-                                    Console.WriteLine("New Message Channel " + ChannelId[crtChannelId][0] + " \n" + ((TLMessage)tLAbsMessage).Message);
-                                    if (ChannelId.ContainsKey(crtChannelId))
+                                    int crtChannelId = channel.ChannelId;
+                                    if (crtChannelId != MyChanId && ChannelId.ContainsKey(crtChannelId))
                                     {
-                                        if (((TLMessage)tLAbsMessage).Message != "")
+                                        Console.WriteLine("New Message Channel " + ChannelId[crtChannelId][0] + " \n" + ((TLMessage)tLAbsMessage).Message);
+                                        if (ChannelId.ContainsKey(crtChannelId))
                                         {
-                                            if (((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("tp") || ((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("sl"))
+                                            if (((TLMessage)tLAbsMessage).Message != "")
                                             {
-                                                TLChannelMessages historyFromSourceCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = channel.ChannelId, AccessHash = (long)ChannelId[channel.ChannelId][1] });
-                                                List<TLAbsMessage> tLMessageList = historyFromSourceCanal.Messages.ToList().Where(x => x is TLMessage tL).ToList();
-                                                List<TLMessage> orderedtLMessageList = tLMessageList.Cast<TLMessage>().OrderByDescending(x => x.Id).ToList();
-                                                string newMessage = CalculOffset(orderedtLMessageList[1].Message + "\n" + ((TLMessage)tLAbsMessage).Message);
-                                                if (orderedtLMessageList[1].Message.ToLower().Contains("sell") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                if (((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("tp") || ((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("sl"))
                                                 {
-                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                    TLChannelMessages historyFromSourceCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = channel.ChannelId, AccessHash = (long)ChannelId[channel.ChannelId][1] });
+                                                    List<TLAbsMessage> tLMessageList = historyFromSourceCanal.Messages.ToList().Where(x => x is TLMessage tL).ToList();
+                                                    List<TLMessage> orderedtLMessageList = tLMessageList.Cast<TLMessage>().OrderByDescending(x => x.Id).ToList();
+                                                    string newMessage = CalculOffset(orderedtLMessageList[1].Message + "\n" + ((TLMessage)tLAbsMessage).Message);
+                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    {
+                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                    }
+                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("vente") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    {
+                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                    }
+                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("buy") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    {
+                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                    }
+                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("achat") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    {
+                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                    }
                                                 }
-                                                else if (orderedtLMessageList[1].Message.ToLower().Contains("vente") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                else
                                                 {
-                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, ((TLMessage)tLAbsMessage).Message);
                                                 }
-                                                else if (orderedtLMessageList[1].Message.ToLower().Contains("buy") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
-                                                {
-                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
-                                                }
-                                                else if (orderedtLMessageList[1].Message.ToLower().Contains("achat") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
-                                                {
-                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, ((TLMessage)tLAbsMessage).Message);
-                                            }
-                                        }
-                                        else if (((TLMessage)tLAbsMessage).Media != null)
-                                        {
-                                            if (((TLMessage)tLAbsMessage).Media.GetType().ToString() == "TeleSharp.TL.TLMessageMediaPhoto")
-                                            {
-                                                TLMessageMediaPhoto tLMessageMediaPhoto = (TLMessageMediaPhoto)((TLMessage)tLAbsMessage).Media;
-                                                TLPhoto tLPhoto = (TLPhoto)tLMessageMediaPhoto.Photo;
-                                                TLPhotoSize tLPhotoSize = tLPhoto.Sizes.ToList().OfType<TLPhotoSize>().Last();
-                                                TLFileLocation tLFileLocation = (TLFileLocation)tLPhotoSize.Location;
-                                                TLAbsInputFileLocation tLAbsInputFileLocation = new TLInputFileLocation()
-                                                {
-                                                    LocalId = tLFileLocation.LocalId,
-                                                    Secret = tLFileLocation.Secret,
-                                                    VolumeId = tLFileLocation.VolumeId
-                                                };
-                                                TLInputFileLocation TLInputFileLocation = tLAbsInputFileLocation as TLInputFileLocation;
-                                                TLFile buffer = await Client.GetFile(TLInputFileLocation, 1024 * 512);
-                                                TLInputFile fileResult = (TLInputFile)await UploadHelper.UploadFile(Client, "", new StreamReader(new MemoryStream(buffer.Bytes)));
-                                                await Client.SendUploadedPhoto(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, tLMessageMediaPhoto.Caption);
-                                            }
-                                            else if (((TLMessage)tLAbsMessage).Media.GetType().ToString() == "TeleSharp.TL.TLMessageMediaDocument")
-                                            {
-                                                TLMessageMediaDocument tLMessageMediaDocument = (TLMessageMediaDocument)((TLMessage)tLAbsMessage).Media;
-                                                TLDocument tLDocument = (TLDocument)tLMessageMediaDocument.Document;
-                                                TLVector<TLAbsDocumentAttribute> tLAbsDocumentAttributes = tLDocument.Attributes;
-                                                TLInputDocumentFileLocation tLInputDocumentFileLocation = new TLInputDocumentFileLocation()
-                                                {
-                                                    AccessHash = tLDocument.AccessHash,
-                                                    Id = tLDocument.Id,
-                                                    Version = tLDocument.Version,
-                                                };
-                                                TLFile buffer = await Client.GetFile(tLInputDocumentFileLocation, 1024 * 512);
-                                                TLInputFile fileResult = (TLInputFile)await UploadHelper.UploadFile(Client, ((TLDocumentAttributeFilename)tLAbsDocumentAttributes[0]).FileName, new StreamReader(new MemoryStream(buffer.Bytes)));
-                                                await Client.SendUploadedDocument(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, tLMessageMediaDocument.Caption, tLDocument.MimeType, tLAbsDocumentAttributes);
-                                            }
+                                            }                                            
                                         }
                                     }
                                 }
-                            }
+                            }                            
                         }
                     }
                 }
@@ -332,6 +300,45 @@ namespace TelegramCSharpForward
                 }
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        private static string FilterMessage(string message)
+        {
+            List<string> keywordList = new List<string>
+            {
+                "sell",
+                "buy",
+                "achat",
+                "vente",
+                "tp",
+                "sl",
+                "cloture",
+                "clôture",
+                "limit",
+                "be",
+                "partiel",
+                "tp1",
+                "tp2",
+                "tp3",
+                "achète",
+                "sécurisez",
+                "break even",
+                "modifier",
+                "fermer",
+                "fermez",
+                "close",
+                "supprimer",
+                "supprimez"
+            };
+
+            foreach (string keyword in keywordList)
+            {
+                if (message.Contains(keyword))
+                {
+                    return message;
+                }
+            }
+            return null;
         }
 
         private static string CalculOffset(string message)
