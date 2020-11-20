@@ -7,8 +7,6 @@ This Program allows you to <b>redirect all channels you want to an unique channe
 
 This has been designed to be able to correct the price differences between Axitrader and Vantage / FXCM brokers but in the end it is a simple "CalculOffset (...)" function that you can delete if you are not interested.
 
-The message history is logged in a database (SQLite) in order to be able to manage the Response functionalities because it seems to me that we cannot retrieve the history of a channel for which you are not the administrator.
-
 :star2: If you :heart: library, please star it! :star2:
 
 # Table of contents
@@ -47,9 +45,9 @@ To start work, edit the file app.config
     <appSettings>
         <add key="apidId" value="YourApiId" />
         <add key="ApiHash" value="YourApiHash" />
-        <add key="SessionName" value="yourSessionName" />
+        <add key="SessionName" value="YourSessionName" />
         <add key="PhoneNumber" value="YourPhoneNumberWithAreaCode" />
-        <add key="myChanId" value="YourChanIdToRedirectAllMessage" />
+        <add key="myChanId" value="YourChanIdToForward" />
     </appSettings>
 </configuration>
 ```
@@ -57,18 +55,12 @@ When user is authenticated, TLSharp creates special file called TLSharp.dat into
 
 In this file TLSharp store all information needed for user session. 
 
-So you need to authenticate user every time the TLSharp.dat file is corrupted or removed.
-
-In this directory, you will also find the SQLite database which will be created on the first launch with an error message but if you restart the application then it will work (known bug to be corrected)
+So you need to authenticate user every time the "<b>YourSessionName</b>.dat" file is corrupted or removed.
 
 # FAQ
 
 #### What API layer is supported?
 The latest layer supported by TLSharp is 66. If you need a higher layer, help us test the preview version of (your feedback is welcome!)
-
-#### I get an error on first launch !
-
-The SQLite database which will be created on the first launch with an error message but if you restart the application then it will work (known bug to be corrected)
 
 **Attach following information**:
 
