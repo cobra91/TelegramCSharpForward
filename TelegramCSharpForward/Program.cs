@@ -1,6 +1,4 @@
-﻿using DataAccessLibrary;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
@@ -31,6 +29,7 @@ namespace TelegramCSharpForward
         private static Dictionary<int, List<object>> ChannelId = new Dictionary<int, List<object>>();
         private static long AccessHash = 0;
         private static TLAbsDialogs TLAbsDialogs = null;
+        private static string SessionName;
         // RealChanId
         private static int MyChanId = 0;
 
@@ -39,18 +38,15 @@ namespace TelegramCSharpForward
         private static double NasdaqOffset = -10.47;
         private static double DaxOffset = -7.95;
 
-
         static async Task Main()
         {
-            DataAccess.InitializeDatabase();
-            Console.WriteLine("db initialized");
             Console.WriteLine("Load variable from app.config");
             GatherTestConfiguration();
             Console.WriteLine("Variable from app.config loaded");
-            Client = new TelegramClient(ApiId, ApiHash, FileSessionStore, "sessionTL");
+            Client = new TelegramClient(ApiId, ApiHash, FileSessionStore, SessionName);
             await Connect(Client);
             TLAbsDialogs = await Client.GetUserDialogsAsync();
-            StoreDeleteChannelToDb(TLAbsDialogs);
+            ListChannelAndChooseToForward(TLAbsDialogs);
             Chooselistchannel();
             Timer myTimer = new Timer(TimerIntervalInMs);
             myTimer.Elapsed += OnMyTimedEvent;
@@ -85,6 +81,12 @@ namespace TelegramCSharpForward
             if (string.IsNullOrEmpty(ApiHash))
             {
                 Debug.WriteLine(appConfigMsgWarning, nameof(ApiHash));
+            }
+
+            SessionName = ConfigurationManager.AppSettings[nameof(SessionName)];
+            if (string.IsNullOrEmpty(SessionName))
+            {
+                Debug.WriteLine(appConfigMsgWarning, nameof(SessionName));
             }
 
             PhoneNumber = ConfigurationManager.AppSettings[nameof(PhoneNumber)];
@@ -142,7 +144,7 @@ namespace TelegramCSharpForward
             }
         }
 
-        static void StoreDeleteChannelToDb(TLAbsDialogs tLAbsDialogs)
+        static void ListChannelAndChooseToForward(TLAbsDialogs tLAbsDialogs)
         {
             // List all channel and store ID, channelTitle and AccessHash
             Console.WriteLine("List all channel and store ID, channelTitle and AccessHash");
@@ -150,11 +152,6 @@ namespace TelegramCSharpForward
             {
                 if (tLAbsChat is TLChannel channel)
                 {
-                    List<Channel> channelListFromBDD = DataAccess.GetChannelData();
-                    if (channelListFromBDD.FirstOrDefault(x => x.Id == channel.Id) == null)
-                    {
-                        DataAccess.AddChannelData(channel.Id, channel.Title, channel.AccessHash.Value);
-                    }
                     if (!ChannelId.ContainsKey(channel.Id))
                     {
                         List<object> paramList = new List<object>
@@ -170,56 +167,46 @@ namespace TelegramCSharpForward
                     }
                 }
             }
-            // Delete all channel deleted in Telegram
-            Console.WriteLine("Delete all channel deleted in Telegram");
-            List<Channel> channelList = DataAccess.GetChannelData();
-            List<Channel> toRemovechannelList = channelList.Where(x => !ChannelId.ContainsKey(x.Id)).ToList();
-            foreach (Channel channel1 in toRemovechannelList)
-            {
-                DataAccess.RemoveChannel(channel1.Id);
-                DataAccess.RemoveMessageFromChannel(channel1.Id);
-            }
         }
 
         static void Chooselistchannel()
         {
-            Console.WriteLine("Liste des canal existants en Base de données :");
+            Console.WriteLine("List all existing channel :");
             //1) Ajouter un mécanisme avant de faire les Timer pour choisir la liste des Channel qui seront pris en compte !
             int cpt = 0;
-            foreach (Channel channel in DataAccess.GetChannelData().Where(x => x.Id != MyChanId).OrderByDescending(x => x.Id))
+            foreach (KeyValuePair<int, List<object>> channel in ChannelId.OrderBy(obj => obj.Key).ToDictionary(obj => obj.Key, obj => obj.Value))
             {
-                Console.WriteLine(cpt + ") " + channel.Title);
+                Console.WriteLine(cpt + ") " + channel.Value[0]);
                 cpt++;
             }
-            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 0,18 and 20)");
+            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 8,11 and 31)");
             string input = Console.ReadLine();
             if (input == "")
             {
-                input = "0,18,20";
+                input = "8,11,31";
             }
             Dictionary<int, List<object>> channelIdToKeep = new Dictionary<int, List<object>>();
             foreach (string chanId in input.Split(','))
             {
-                Channel crtChannel = DataAccess.GetChannelData().Where(x => x.Id != MyChanId).OrderByDescending(x => x.Id).ToList()[int.Parse(chanId)];
-                if (!channelIdToKeep.ContainsKey(crtChannel.Id))
+                Dictionary<int, List<object>> crtChannel = ChannelId.OrderBy(obj => obj.Key).ToDictionary(obj => obj.Key, obj => obj.Value);
+                if (!channelIdToKeep.ContainsKey(crtChannel.ElementAt(int.Parse(chanId)).Key))
                 {
                     List<object> paramList = new List<object>
                     {
-                        crtChannel.Title,
-                        crtChannel.AccessHash
+                        crtChannel.ElementAt(int.Parse(chanId)).Value[0],
+                        crtChannel.ElementAt(int.Parse(chanId)).Value[1]
                     };
-                    channelIdToKeep.Add(crtChannel.Id, paramList);
+                    channelIdToKeep.Add(crtChannel.ElementAt(int.Parse(chanId)).Key, paramList);
                 }
             }
-            Channel myChannel = DataAccess.GetChannelData().First(x => x.Id == MyChanId);
-            if (!channelIdToKeep.ContainsKey(myChannel.Id))
+            if (!channelIdToKeep.ContainsKey(MyChanId))
             {
                 List<object> paramList = new List<object>
                 {
-                    myChannel.Title,
-                    myChannel.AccessHash
+                    ChannelId[MyChanId][0],
+                    ChannelId[MyChanId][1]
                 };
-                channelIdToKeep.Add(myChannel.Id, paramList);
+                channelIdToKeep.Add(MyChanId, paramList);
             }
             ChannelId = channelIdToKeep;
         }
@@ -248,14 +235,14 @@ namespace TelegramCSharpForward
                                 int crtChannelId = channel0.ChannelId;
                                 if (crtChannelId != MyChanId && ChannelId.ContainsKey(crtChannelId))
                                 {
-                                    Console.WriteLine("ReplyId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
-                                    await HistoryFromBDD((TLMessage)tLAbsMessage);
+                                    Console.WriteLine("ReplyChannelId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
+                                    await ReplyMessage((TLMessage)tLAbsMessage);
                                 }
                             }
                             else if (((TLMessage)tLAbsMessage).ToId is TLPeerChat chat && ((TLMessage)tLAbsMessage).ReplyToMsgId != null)
                             {
-                                Console.WriteLine("ReplyId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
-                                await HistoryFromBDD((TLMessage)tLAbsMessage);
+                                Console.WriteLine("ReplyChatId " + ((TLMessage)tLAbsMessage).ReplyToMsgId);
+                                await ReplyMessage((TLMessage)tLAbsMessage);
                             }
                             else if (((TLMessage)tLAbsMessage).ToId is TLPeerChannel channel && ((TLMessage)tLAbsMessage).ReplyToMsgId == null)
                             {
@@ -267,8 +254,33 @@ namespace TelegramCSharpForward
                                     {
                                         if (((TLMessage)tLAbsMessage).Message != "")
                                         {
-                                            DataAccess.AddMessageData(((TLMessage)tLAbsMessage).Id, crtChannelId, ((TLMessage)tLAbsMessage).Message);
-                                            await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, "Channel " + ChannelId[crtChannelId][0] + " \n" + ((TLMessage)tLAbsMessage).Message);
+                                            if (((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("tp") || ((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("sl"))
+                                            {
+                                                TLChannelMessages historyFromSourceCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = channel.ChannelId, AccessHash = (long)ChannelId[channel.ChannelId][1] });
+                                                List<TLAbsMessage> tLMessageList = historyFromSourceCanal.Messages.ToList().Where(x => x is TLMessage tL).ToList();
+                                                List<TLMessage> orderedtLMessageList = tLMessageList.Cast<TLMessage>().OrderByDescending(x => x.Id).ToList();
+                                                string newMessage = CalculOffset(orderedtLMessageList[1].Message + "\n" + ((TLMessage)tLAbsMessage).Message);
+                                                if (orderedtLMessageList[1].Message.ToLower().Contains("sell") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                {
+                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                }
+                                                else if (orderedtLMessageList[1].Message.ToLower().Contains("vente") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                {
+                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                }
+                                                else if (orderedtLMessageList[1].Message.ToLower().Contains("buy") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                {
+                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                }
+                                                else if (orderedtLMessageList[1].Message.ToLower().Contains("achat") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                {
+                                                    await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, ((TLMessage)tLAbsMessage).Message);
+                                            }
                                         }
                                         else if (((TLMessage)tLAbsMessage).Media != null)
                                         {
@@ -287,7 +299,7 @@ namespace TelegramCSharpForward
                                                 TLInputFileLocation TLInputFileLocation = tLAbsInputFileLocation as TLInputFileLocation;
                                                 TLFile buffer = await Client.GetFile(TLInputFileLocation, 1024 * 512);
                                                 TLInputFile fileResult = (TLInputFile)await UploadHelper.UploadFile(Client, "", new StreamReader(new MemoryStream(buffer.Bytes)));
-                                                await Client.SendUploadedPhoto(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, "Channel " + ChannelId[crtChannelId][0] + " \n" + tLMessageMediaPhoto.Caption);
+                                                await Client.SendUploadedPhoto(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, tLMessageMediaPhoto.Caption);
                                             }
                                             else if (((TLMessage)tLAbsMessage).Media.GetType().ToString() == "TeleSharp.TL.TLMessageMediaDocument")
                                             {
@@ -302,7 +314,7 @@ namespace TelegramCSharpForward
                                                 };
                                                 TLFile buffer = await Client.GetFile(tLInputDocumentFileLocation, 1024 * 512);
                                                 TLInputFile fileResult = (TLInputFile)await UploadHelper.UploadFile(Client, ((TLDocumentAttributeFilename)tLAbsDocumentAttributes[0]).FileName, new StreamReader(new MemoryStream(buffer.Bytes)));
-                                                await Client.SendUploadedDocument(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, "Channel " + ChannelId[crtChannelId][0] + " \n" + tLMessageMediaDocument.Caption, tLDocument.MimeType, tLAbsDocumentAttributes);
+                                                await Client.SendUploadedDocument(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, tLMessageMediaDocument.Caption, tLDocument.MimeType, tLAbsDocumentAttributes);
                                             }
                                         }
                                     }
@@ -330,8 +342,8 @@ namespace TelegramCSharpForward
                 string firstPartOfMessage = null;
                 if (message.ToLower().Contains("dax30"))
                 {
-                    firstPartOfMessage = message.Substring(0, message.LastIndexOf("dax") + 5);
-                    message = message.Substring(message.LastIndexOf("dax30") + 6);
+                    firstPartOfMessage = message.Split(' ')[0] + " " + message.Split(' ')[1];
+                    message = message.Substring(message.IndexOf(message.Split(' ')[2]));
                 }
                 MatchCollection matchCollection = regexp.Matches(message);
                 if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
@@ -346,13 +358,13 @@ namespace TelegramCSharpForward
                     message = firstPartOfMessage + " " + message;
                 }
             }
-            else if (message.ToLower().Contains("dj30") || message.ToLower().Contains("dowjones"))
+            else if (message.ToLower().Contains("us30") || message.ToLower().Contains("dj30") || message.ToLower().Contains("dowjones") || message.ToLower().Contains("dow jones"))
             {
                 string firstPartOfMessage = null;
-                if (message.ToLower().Contains("dj30"))
+                if (message.ToLower().Contains("us30") || message.ToLower().Contains("dj30"))
                 {
-                    firstPartOfMessage = message.Substring(0, message.LastIndexOf("dj") + 4);
-                    message = message.Substring(message.LastIndexOf("dj30") + 5);
+                    firstPartOfMessage = message.Split(' ')[0] + " " + message.Split(' ')[1];
+                    message = message.Substring(message.IndexOf(message.Split(' ')[2]));
                 }
                 MatchCollection matchCollection = regexp.Matches(message);
                 if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
@@ -395,34 +407,27 @@ namespace TelegramCSharpForward
             }
         }
 
-        private static async Task HistoryFromBDD(TLMessage tLAbsMessage)
+        private static async Task ReplyMessage(TLMessage tLAbsMessage)
         {
             try
             {
                 if (tLAbsMessage.ToId is TLPeerChannel channel)
                 {
                     Console.WriteLine($"New Reply from channel {ChannelId[channel.ChannelId][0]} Message {tLAbsMessage.Message} to message {tLAbsMessage.ReplyToMsgId}");
-                    Message message = DataAccess.GetMessageDataById(tLAbsMessage.ReplyToMsgId.Value);
                     TLChannelMessages historyFromSourceCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = channel.ChannelId, AccessHash = (long)ChannelId[channel.ChannelId][1] });
                     TLMessage tLMessage = (TLMessage)historyFromSourceCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Id == tLAbsMessage.ReplyToMsgId);
-                    if (message != null)
+                    if (tLMessage != null)
                     {
-                        if (tLMessage != null && tLMessage.Message != message.Text)
-                        {
-                            DataAccess.UpdateMessage(tLAbsMessage.ReplyToMsgId.Value, tLMessage.Message);
-                            message.Text = tLMessage.Message;
-                        }
-                        Console.WriteLine($"REPLY{message.Text}\n{tLAbsMessage.Message}");
-                        DataAccess.AddMessageData(tLAbsMessage.Id, channel.ChannelId, tLAbsMessage.Message);
+                        Console.WriteLine($"REPLY {tLMessage.Message}\n{tLAbsMessage.Message}");
                         TLChannelMessages historyFromMyNewCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash });
-                        List<TLAbsMessage> tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(message.Text)).ToList();
-                        if(tLAbsMessages.Count == 0 || tLAbsMessages.Count > 1)
+                        List<TLAbsMessage> tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message == tLMessage.Message).ToList();
+                        if (tLAbsMessages.Count == 0 || tLAbsMessages.Count > 1)
                         {
-                            throw new Exception("Multiple message found for Reply to unique Message");
+                            throw new Exception("None or Multiple message found for Reply to unique Message");
                         }
                         else
                         {
-                            TLMessage tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message.Contains(message.Text));
+                            TLMessage tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message == tLMessage.Message);
                             if (tLMessageInNewchan != null)
                             {
                                 TLRequestSendMessage send = new TLRequestSendMessage
@@ -438,13 +443,7 @@ namespace TelegramCSharpForward
                             {
                                 throw new Exception("Original Message not found to Reply");
                             }
-                        }                        
-                    }
-                    else
-                    {
-                        Console.WriteLine("REPLY NOT HISTORIZED MESSAGE \n" + tLAbsMessage.Message);
-                        DataAccess.AddMessageData(tLAbsMessage.Id, channel.ChannelId, tLAbsMessage.Message);
-                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, $"Channel {ChannelId[channel.ChannelId][0]}\n NOT HISTORIZED MESSAGE \nREPLY \n {tLAbsMessage.Message}");
+                        }
                     }
                 }
             }

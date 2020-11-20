@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccessLibrary\DataAccessLibrary.csproj" />
     <ProjectReference Include="..\TeleSharp.TL\TeleSharp.TL.csproj" />
     <ProjectReference Include="..\TLSharp.Core\TLSharp.Core.csproj" />
   </ItemGroup>
