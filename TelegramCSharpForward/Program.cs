@@ -262,19 +262,19 @@ namespace TelegramCSharpForward
                                                     List<TLAbsMessage> tLMessageList = historyFromSourceCanal.Messages.ToList().Where(x => x is TLMessage tL).ToList();
                                                     List<TLMessage> orderedtLMessageList = tLMessageList.Cast<TLMessage>().OrderByDescending(x => x.Id).ToList();
                                                     string newMessage = CalculOffset(orderedtLMessageList[1].Message + "\n" + ((TLMessage)tLAbsMessage).Message);
-                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
                                                     {
                                                         await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
                                                     }
-                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("vente") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("vente") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
                                                     {
                                                         await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
                                                     }
-                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("buy") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("buy") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
                                                     {
                                                         await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
                                                     }
-                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("achat") && !orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("achat") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
                                                     {
                                                         await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
                                                     }
@@ -309,18 +309,17 @@ namespace TelegramCSharpForward
                 "sell",
                 "buy",
                 "achat",
+                "achète",
                 "vente",
-                "tp",
-                "sl",
+                "tp ",
+                "sl ",
                 "cloture",
                 "clôture",
-                "limit",
-                "be",
-                "partiel",
+                " limit ",
+                " partiel",
                 "tp1",
                 "tp2",
                 "tp3",
-                "achète",
                 "sécurisez",
                 "break even",
                 "modifier",
@@ -333,7 +332,7 @@ namespace TelegramCSharpForward
 
             foreach (string keyword in keywordList)
             {
-                if (message.Contains(keyword))
+                if (message.ToLower().Contains(keyword))
                 {
                     return message;
                 }
