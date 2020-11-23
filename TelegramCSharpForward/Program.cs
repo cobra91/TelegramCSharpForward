@@ -94,7 +94,7 @@ namespace TelegramCSharpForward
                 Debug.WriteLine(appConfigMsgWarning, nameof(PhoneNumber));
             }
 
-            string myChanId = ConfigurationManager.AppSettings["myChanId"];
+            string myChanId = ConfigurationManager.AppSettings["myChanIdDev"];
             if (string.IsNullOrEmpty(myChanId))
             {
                 Debug.WriteLine(appConfigMsgWarning, nameof(myChanId));
@@ -261,22 +261,8 @@ namespace TelegramCSharpForward
                                                     List<TLMessage> orderedtLMessageList = tLMessageList.Cast<TLMessage>().OrderByDescending(x => x.Id).ToList();
                                                     string newMessage = CalculOffset(orderedtLMessageList[1].Message + "\n" + ((TLMessage)tLAbsMessage).Message);
                                                     bool sent = false;
-                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
-                                                    {
-                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
-                                                        sent = true;
-                                                    }
-                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("vente") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
-                                                    {
-                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
-                                                        sent = true;
-                                                    }
-                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("buy") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
-                                                    {
-                                                        await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
-                                                        sent = true;
-                                                    }
-                                                    else if (orderedtLMessageList[1].Message.ToLower().Contains("achat") && orderedtLMessageList[1].Message.ToLower().Contains("sl"))
+                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") || orderedtLMessageList[1].Message.ToLower().Contains("vente") || orderedtLMessageList[1].Message.ToLower().Contains("buy") 
+                                                        || orderedtLMessageList[1].Message.ToLower().Contains("achat"))
                                                     {
                                                         await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
                                                         sent = true;
