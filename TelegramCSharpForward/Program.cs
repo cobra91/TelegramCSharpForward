@@ -347,7 +347,7 @@ namespace TelegramCSharpForward
                 "pips en cours ✅♻️"
             };
 
-            if (message.ToLower().Contains("@") || message.ToLower().Contains("http"))
+            if (message.ToLower().Contains("http"))
             {
                 return null;
             }
