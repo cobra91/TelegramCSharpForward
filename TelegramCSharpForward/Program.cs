@@ -226,7 +226,8 @@ namespace TelegramCSharpForward
                         TLAbsDialogs = await Client.GetUserDialogsAsync();
                         foreach (TLAbsMessage tLAbsMessage in ((TLDialogs)TLAbsDialogs).Messages.Where(x => x is TLMessage message && TimeUnixTOWindows(message.Date, true) >= nowDateTime.AddMilliseconds(-(TimerIntervalInMs - 1))))
                         {
-                            if (FilterMessage(((TLMessage)tLAbsMessage).Message) != null)
+                            ((TLMessage)tLAbsMessage).Message = FilterMessage(((TLMessage)tLAbsMessage).Message);
+                            if (((TLMessage)tLAbsMessage).Message != null)
                             {
                                 ((TLMessage)tLAbsMessage).Message = CalculOffset(((TLMessage)tLAbsMessage).Message);
                                 if (((TLMessage)tLAbsMessage).ToId is TLPeerUser tLPeerUser)
@@ -345,9 +346,17 @@ namespace TelegramCSharpForward
             {
                 if (message.ToLower().Contains(keyword))
                 {
-                    if (message.ToLower().Contains("Clôture partielle") || message.ToLower().Contains("Clôturez partiellement") || message.ToLower().Contains("fermez la moitié"))
+                    if (message.ToLower().Contains("clôture partielle") || message.ToLower().Contains("clôturez partiellement") || message.ToLower().Contains("fermez la moitié"))
                     {
-                        message = message.Replace("Clôture partielle", "Close half").Replace("Clôturez partiellement", "Close half");
+                        message = message.Replace("Clôture partielle", "Clôture partielle (Close half)").Replace("Clôturez partiellement", "Clôturez partiellement (Close half)");
+                    }
+                    if(message.ToLower().Contains("supprimez le buy limit"))
+                    {
+                        message = message.Replace("Supprimez le buy limit ⚠️", "Supprimez/Close le buy limit ⚠️");
+                    }
+                    if (message.ToLower().Contains("supprimez le sell limit"))
+                    {
+                        message = message.Replace("Supprimez le sell limit ⚠️", "Supprimez/Close le sell limit ⚠️");
                     }
                     return message;
                 }
