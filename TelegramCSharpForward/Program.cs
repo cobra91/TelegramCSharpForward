@@ -33,9 +33,12 @@ namespace TelegramCSharpForward
         private static int MyChanId = 0;
 
         // Offset Indice
-        private static double DowJonesOffset = -83.91;
-        private static double NasdaqOffset = -10.47;
-        private static double DaxOffset = -7.95;
+        // changement le 24.11 ancienne valeur -83.91
+        private static double DowJonesOffset = -54;
+        // changement le 24.11 ancienne valeur -10.47
+        private static double NasdaqOffset = -10.22;
+        // changement le 24.11 ancienne valeur -7.95
+        private static double DaxOffset = -6.5;
 
         static async Task Main()
         {
@@ -94,7 +97,7 @@ namespace TelegramCSharpForward
                 Debug.WriteLine(appConfigMsgWarning, nameof(PhoneNumber));
             }
 
-            string myChanId = ConfigurationManager.AppSettings["myChanIdDev"];
+            string myChanId = ConfigurationManager.AppSettings["myChanId"];
             if (string.IsNullOrEmpty(myChanId))
             {
                 Debug.WriteLine(appConfigMsgWarning, nameof(myChanId));
