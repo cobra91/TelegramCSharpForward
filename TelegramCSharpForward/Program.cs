@@ -264,7 +264,7 @@ namespace TelegramCSharpForward
                                                     List<TLMessage> orderedtLMessageList = tLMessageList.Cast<TLMessage>().OrderByDescending(x => x.Id).ToList();
                                                     string newMessage = CalculOffset(orderedtLMessageList[1].Message + "\n" + ((TLMessage)tLAbsMessage).Message);
                                                     bool sent = false;
-                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") || orderedtLMessageList[1].Message.ToLower().Contains("vente") || orderedtLMessageList[1].Message.ToLower().Contains("buy") 
+                                                    if (orderedtLMessageList[1].Message.ToLower().Contains("sell") || orderedtLMessageList[1].Message.ToLower().Contains("vente") || orderedtLMessageList[1].Message.ToLower().Contains("buy")
                                                         || orderedtLMessageList[1].Message.ToLower().Contains("achat"))
                                                     {
                                                         await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, newMessage);
@@ -345,6 +345,10 @@ namespace TelegramCSharpForward
             {
                 if (message.ToLower().Contains(keyword))
                 {
+                    if (message.ToLower().Contains("Clôture partielle") || message.ToLower().Contains("Clôturez partiellement") || message.ToLower().Contains("fermez la moitié"))
+                    {
+                        message = message.Replace("Clôture partielle", "Close half").Replace("Clôturez partiellement", "Close half");
+                    }
                     return message;
                 }
             }
