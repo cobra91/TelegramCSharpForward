@@ -358,6 +358,10 @@ namespace TelegramCSharpForward
                     {
                         message = message.Replace("Supprimez le sell limit ⚠️", "Supprimez/Close le sell limit ⚠️");
                     }
+                    if (message.ToLower().Contains("fermé à"))
+                    {
+                        message = message.Replace("Fermé à", "Cloturé à");
+                    }
                     return message;
                 }
             }
