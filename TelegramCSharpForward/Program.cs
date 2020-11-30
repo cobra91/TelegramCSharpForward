@@ -34,11 +34,14 @@ namespace TelegramCSharpForward
 
         // Offset Indice
         // changement le 24.11 ancienne valeur -83.91
-        private static double DowJonesOffset = -54;
+        // changement le 30.11 ancienne valeur -54
+        private static double DowJonesOffset = -40;
         // changement le 24.11 ancienne valeur -10.47
-        private static double NasdaqOffset = -10.22;
+        // changement le 30.11 ancienne valeur -10.22
+        private static double NasdaqOffset = -9;
         // changement le 24.11 ancienne valeur -7.95
-        private static double DaxOffset = -6.5;
+        // changement le 30.11 ancienne valeur -6.5
+        private static double DaxOffset = -5.1;
 
         static async Task Main()
         {
@@ -180,11 +183,11 @@ namespace TelegramCSharpForward
                 Console.WriteLine(cpt + ") " + channel.Value[0]);
                 cpt++;
             }
-            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 7,10, 25 and 32)");
+            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 7,9, 23 and 31)");
             string input = Console.ReadLine();
             if (input == "")
             {
-                input = "7,10,25,32";
+                input = "7,9,23,31";
             }
             Dictionary<int, List<object>> channelIdToKeep = new Dictionary<int, List<object>>();
             foreach (string chanId in input.Split(','))
@@ -282,7 +285,7 @@ namespace TelegramCSharpForward
                                                                 ((TLMessage)tLChannelMessagesFromSourceCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tl && tl.Message == CalculOffset(orderedtLMessageList[1].Message))).Id
                                                             }
                                                         };
-                                                        await Client.SendRequestAsync<TLAffectedMessages>(request);
+                                                        //await Client.SendRequestAsync<TLAffectedMessages>(request);
                                                     }
                                                 }
                                                 else
@@ -361,6 +364,10 @@ namespace TelegramCSharpForward
                     if (message.ToLower().Contains("fermé à"))
                     {
                         message = message.Replace("Fermé à", "Cloturé à");
+                    }
+                    if (message.ToLower().Contains("sécurisez"))
+                    {
+                        message = message.Replace("Sécurisez", "Break even");
                     }
                     return message;
                 }
