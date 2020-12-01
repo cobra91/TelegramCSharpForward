@@ -365,6 +365,10 @@ namespace TelegramCSharpForward
                     {
                         message = message.Replace("Fermé à", "Cloturé à");
                     }
+                    if (message.ToLower().Contains("fermez à"))
+                    {
+                        message = message.Replace("Fermez à", "Cloturé à");
+                    }
                     if (message.ToLower().Contains("sécurisez"))
                     {
                         message = message.Replace("Sécurisez", "Break even");
