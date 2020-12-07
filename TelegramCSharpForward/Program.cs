@@ -337,12 +337,32 @@ namespace TelegramCSharpForward
                 "close",
                 "supprimer",
                 "supprimez",
-                "pips en cours ✅♻️"
+                "pips en cours ✅♻️",
+                "décalez",
+                "annulez",
+                "mettez le sl"
             };
 
             if (message.ToLower().Contains("http"))
             {
                 return null;
+            }
+
+            if(message.ToLower().Contains("🅂🄻"))
+            {
+                message = message.Replace("🅂🄻", "SL");
+                message = message.Replace("✅ 𝗧𝗣", "✅ TP");
+                if (message.Contains("💡𝗢𝗿𝗱𝗿𝗲 𝗲𝗻 𝗔𝘁𝘁𝗲𝗻𝘁𝗲 ⚠️"))
+                {
+                    if(message.Contains("📉 Vente ➡️"))
+                    {
+                        message = message.Replace("📉 Vente ➡️", "📉 Sell limit ➡️");
+                    }
+                    if (message.Contains("📈 Achat ➡️"))
+                    {
+                        message = message.Replace("📈 Achat ➡️", "📈 Buy limit ➡️");
+                    }
+                }
             }
 
             foreach (string keyword in keywordList)
@@ -361,6 +381,10 @@ namespace TelegramCSharpForward
                     {
                         message = message.Replace("Supprimez le sell limit ⚠️", "Supprimez/Close le sell limit ⚠️");
                     }
+                    if(message.ToLower().Contains("Annulez l’ordre en attente"))
+                    {
+                        message = message.Replace("Annulez l’ordre en attente", "Annulez(Close) l’ordre en attente");
+                    }
                     if (message.ToLower().Contains("fermé à"))
                     {
                         message = message.Replace("Fermé à", "Cloturé à");
@@ -372,6 +396,14 @@ namespace TelegramCSharpForward
                     if (message.ToLower().Contains("sécurisez"))
                     {
                         message = message.Replace("Sécurisez", "Break even");
+                    }
+                    if (message.ToLower().Contains("décalez"))
+                    {
+                        message = message.Replace("Décalez", "Modifier ");
+                    }
+                    if(message.ToLower().Contains("mettez le sl"))
+                    {
+                        message = message.Replace("Mettez le SL", "Modifier SL");
                     }
                     return message;
                 }
