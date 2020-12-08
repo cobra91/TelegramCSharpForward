@@ -10,6 +10,7 @@ using System.Timers;
 
 using TeleSharp.TL;
 using TeleSharp.TL.Messages;
+using TeleSharp.TL.Upload;
 
 using TLSharp.Core;
 using TLSharp.Core.Utils;
@@ -233,7 +234,7 @@ namespace TelegramCSharpForward
                         foreach (TLAbsMessage tLAbsMessage in ((TLDialogs)TLAbsDialogs).Messages.Where(x => x is TLMessage message && TimeUnixTOWindows(message.Date, true) >= nowDateTime.AddMilliseconds(-(TimerIntervalInMs - 1))))
                         {
                             ((TLMessage)tLAbsMessage).Message = FilterMessage(((TLMessage)tLAbsMessage).Message);
-                            if (((TLMessage)tLAbsMessage).Message != null)
+                            if (((TLMessage)tLAbsMessage).Message != null || ((TLMessage)tLAbsMessage).Media != null)
                             {
                                 ((TLMessage)tLAbsMessage).Message = CalculOffset(((TLMessage)tLAbsMessage).Message);
                                 if (((TLMessage)tLAbsMessage).ToId is TLPeerUser tLPeerUser)
@@ -262,7 +263,7 @@ namespace TelegramCSharpForward
                                         Console.WriteLine("New Message Channel " + ChannelId[crtChannelId][0] + " \n" + ((TLMessage)tLAbsMessage).Message);
                                         if (ChannelId.ContainsKey(crtChannelId))
                                         {
-                                            if (((TLMessage)tLAbsMessage).Message != "")
+                                            if (!string.IsNullOrEmpty(((TLMessage)tLAbsMessage).Message))
                                             {
                                                 if (((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("tp") || ((TLMessage)tLAbsMessage).Message.ToLower().StartsWith("sl"))
                                                 {
@@ -294,6 +295,41 @@ namespace TelegramCSharpForward
                                                 else
                                                 {
                                                     await Client.SendMessageAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, ((TLMessage)tLAbsMessage).Message);
+                                                }
+                                            }
+                                            else if (((TLMessage)tLAbsMessage).Media != null && (crtChannelId == 1360607920 || crtChannelId == 1302796093))
+                                            {
+                                                if (((TLMessage)tLAbsMessage).Media.GetType().ToString() == "TeleSharp.TL.TLMessageMediaPhoto")
+                                                {
+                                                    TLMessageMediaPhoto tLMessageMediaPhoto = (TLMessageMediaPhoto)((TLMessage)tLAbsMessage).Media;
+                                                    TLPhoto tLPhoto = (TLPhoto)tLMessageMediaPhoto.Photo;
+                                                    TLPhotoSize tLPhotoSize = tLPhoto.Sizes.ToList().OfType<TLPhotoSize>().Last();
+                                                    TLFileLocation tLFileLocation = (TLFileLocation)tLPhotoSize.Location;
+                                                    TLAbsInputFileLocation tLAbsInputFileLocation = new TLInputFileLocation()
+                                                    {
+                                                        LocalId = tLFileLocation.LocalId,
+                                                        Secret = tLFileLocation.Secret,
+                                                        VolumeId = tLFileLocation.VolumeId
+                                                    };
+                                                    TLInputFileLocation TLInputFileLocation = tLAbsInputFileLocation as TLInputFileLocation;
+                                                    TLFile buffer = await Client.GetFile(TLInputFileLocation, 1024 * 512);
+                                                    TLInputFile fileResult = (TLInputFile)await UploadHelper.UploadFile(Client, "", new StreamReader(new MemoryStream(buffer.Bytes)));
+                                                    await Client.SendUploadedPhoto(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, tLMessageMediaPhoto.Caption);
+                                                }
+                                                else if (((TLMessage)tLAbsMessage).Media.GetType().ToString() == "TeleSharp.TL.TLMessageMediaDocument")
+                                                {
+                                                    TLMessageMediaDocument tLMessageMediaDocument = (TLMessageMediaDocument)((TLMessage)tLAbsMessage).Media;
+                                                    TLDocument tLDocument = (TLDocument)tLMessageMediaDocument.Document;
+                                                    TLVector<TLAbsDocumentAttribute> tLAbsDocumentAttributes = tLDocument.Attributes;
+                                                    TLInputDocumentFileLocation tLInputDocumentFileLocation = new TLInputDocumentFileLocation()
+                                                    {
+                                                        AccessHash = tLDocument.AccessHash,
+                                                        Id = tLDocument.Id,
+                                                        Version = tLDocument.Version,
+                                                    };
+                                                    TLFile buffer = await Client.GetFile(tLInputDocumentFileLocation, 1024 * 512);
+                                                    TLInputFile fileResult = (TLInputFile)await UploadHelper.UploadFile(Client, ((TLDocumentAttributeFilename)tLAbsDocumentAttributes[0]).FileName, new StreamReader(new MemoryStream(buffer.Bytes)));
+                                                    await Client.SendUploadedDocument(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash }, fileResult, tLMessageMediaDocument.Caption, tLDocument.MimeType, tLAbsDocumentAttributes);
                                                 }
                                             }
                                         }
@@ -356,6 +392,7 @@ namespace TelegramCSharpForward
                 message = message.Replace("🅂🄻", "SL");
                 message = message.Replace("✅ 𝗧𝗣", "✅ TP");
                 message = message.Replace("DowJones30", "dj30");
+                message = message.Replace("Oil WTI", "Oil");
                 if (message.Contains("𝗢𝗿𝗱𝗿𝗲 𝗲𝗻 𝗔𝘁𝘁𝗲𝗻𝘁𝗲") || message.Contains("Ordre en Attente"))
                 {
                     message = message.Replace("💶 🄿🅁🄸🅇 : ", "@");
@@ -430,57 +467,60 @@ namespace TelegramCSharpForward
 
         private static string CalculOffset(string message)
         {
-            Regex regexp = new Regex("([0-9]{2} [0-9]{3})|([0-9]{5})");
-            if (message.ToLower().Contains("dax30") || message.ToLower().Contains("dax"))
+            if (message != null)
             {
-                string firstPartOfMessage = null;
-                if (message.ToLower().Contains("dax30"))
+                Regex regexp = new Regex("([0-9]{2} [0-9]{3})|([0-9]{5})");
+                if (message.ToLower().Contains("dax30") || message.ToLower().Contains("dax"))
                 {
-                    firstPartOfMessage = message.Split(' ')[0] + " " + message.Split(' ')[1];
-                    message = message.Substring(message.IndexOf(message.Split(' ')[2]));
-                }
-                MatchCollection matchCollection = regexp.Matches(message);
-                if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
-                {
-                    foreach (Match match in matchCollection)
+                    string firstPartOfMessage = null;
+                    if (message.ToLower().Contains("dax30"))
                     {
-                        message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + DaxOffset).ToString());
+                        firstPartOfMessage = message.Split(' ')[0] + " " + message.Split(' ')[1];
+                        message = message.Substring(message.IndexOf(message.Split(' ')[2]));
+                    }
+                    MatchCollection matchCollection = regexp.Matches(message);
+                    if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
+                    {
+                        foreach (Match match in matchCollection)
+                        {
+                            message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + DaxOffset).ToString());
+                        }
+                    }
+                    if (firstPartOfMessage != null)
+                    {
+                        message = firstPartOfMessage + " " + message;
                     }
                 }
-                if (firstPartOfMessage != null)
+                else if (message.ToLower().Contains("us30") || message.ToLower().Contains("dj30") || message.ToLower().Contains("dowjones") || message.ToLower().Contains("dow jones"))
                 {
-                    message = firstPartOfMessage + " " + message;
-                }
-            }
-            else if (message.ToLower().Contains("us30") || message.ToLower().Contains("dj30") || message.ToLower().Contains("dowjones") || message.ToLower().Contains("dow jones"))
-            {
-                string firstPartOfMessage = null;
-                if (message.ToLower().Contains("us30") || message.ToLower().Contains("dj30"))
-                {
-                    firstPartOfMessage = message.Split(' ')[0] + " " + message.Split(' ')[1];
-                    message = message.Substring(message.IndexOf(message.Split(' ')[2]));
-                }
-                MatchCollection matchCollection = regexp.Matches(message);
-                if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
-                {
-                    foreach (Match match in matchCollection)
+                    string firstPartOfMessage = null;
+                    if (message.ToLower().Contains("us30") || message.ToLower().Contains("dj30"))
                     {
-                        message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + DowJonesOffset).ToString());
+                        firstPartOfMessage = message.Split(' ')[0] + " " + message.Split(' ')[1];
+                        message = message.Substring(message.IndexOf(message.Split(' ')[2]));
+                    }
+                    MatchCollection matchCollection = regexp.Matches(message);
+                    if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
+                    {
+                        foreach (Match match in matchCollection)
+                        {
+                            message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + DowJonesOffset).ToString());
+                        }
+                    }
+                    if (firstPartOfMessage != null)
+                    {
+                        message = firstPartOfMessage + " " + message;
                     }
                 }
-                if (firstPartOfMessage != null)
+                else if (message.ToLower().Contains("nasdaq"))
                 {
-                    message = firstPartOfMessage + " " + message;
-                }
-            }
-            else if (message.ToLower().Contains("nasdaq"))
-            {
-                MatchCollection matchCollection = regexp.Matches(message);
-                if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
-                {
-                    foreach (Match match in matchCollection)
+                    MatchCollection matchCollection = regexp.Matches(message);
+                    if (matchCollection.Count() > 0 && matchCollection.Where(x => x.Success == true).Count() > 0)
                     {
-                        message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + NasdaqOffset).ToString());
+                        foreach (Match match in matchCollection)
+                        {
+                            message = message.Replace(match.Value, (int.Parse(match.Value.Replace(" ", "")) + NasdaqOffset).ToString());
+                        }
                     }
                 }
             }
@@ -546,13 +586,27 @@ namespace TelegramCSharpForward
                             TLMessage tLMessageInNewchan = tLMessageList.FirstOrDefault(x => x.Id == maxId);
                             if (tLMessageInNewchan != null)
                             {
-                                TLRequestSendMessage send = new TLRequestSendMessage
+                                TLRequestSendMessage send;
+                                if (tLMessageInNewchan.Media != null)
                                 {
-                                    Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
-                                    Message = tLAbsMessage.Message,
-                                    ReplyToMsgId = tLMessageInNewchan.Id,
-                                    RandomId = Helpers.GenerateRandomLong(),
-                                };
+                                    send = new TLRequestSendMessage
+                                    {
+                                        Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
+                                        Message = tLAbsMessage.Message.Replace("Achetez", "Achetez " + ((TLMessageMediaPhoto)tLMessageInNewchan.Media).Caption).Replace("Vendez", "Vendez " + ((TLMessageMediaPhoto)tLMessageInNewchan.Media).Caption),
+                                        ReplyToMsgId = tLMessageInNewchan.Id,
+                                        RandomId = Helpers.GenerateRandomLong(),
+                                    };
+                                }
+                                else
+                                {
+                                    send = new TLRequestSendMessage
+                                    {
+                                        Peer = new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash },
+                                        Message = tLAbsMessage.Message,
+                                        ReplyToMsgId = tLMessageInNewchan.Id,
+                                        RandomId = Helpers.GenerateRandomLong(),
+                                    };
+                                }
                                 await Client.SendRequestAsync<TLUpdates>(send);
                             }
                             else
