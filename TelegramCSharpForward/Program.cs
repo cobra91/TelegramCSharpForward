@@ -35,13 +35,16 @@ namespace TelegramCSharpForward
         // Offset Indice
         // changement le 24.11 ancienne valeur -83.91
         // changement le 30.11 ancienne valeur -54
-        private static double DowJonesOffset = -40;
+        // changement le 08.12 ancienne valeur -40
+        private static double DowJonesOffset = -11;
         // changement le 24.11 ancienne valeur -10.47
         // changement le 30.11 ancienne valeur -10.22
-        private static double NasdaqOffset = -9;
+        // changement le 08.12 ancienne valeur -9
+        private static double NasdaqOffset = -3;
         // changement le 24.11 ancienne valeur -7.95
         // changement le 30.11 ancienne valeur -6.5
-        private static double DaxOffset = -5.1;
+        // changement le 08.12 ancienne valeur -5.1
+        private static double DaxOffset = -4;
 
         static async Task Main()
         {
@@ -352,16 +355,18 @@ namespace TelegramCSharpForward
             {
                 message = message.Replace("🅂🄻", "SL");
                 message = message.Replace("✅ 𝗧𝗣", "✅ TP");
-                if (message.Contains("💡𝗢𝗿𝗱𝗿𝗲 𝗲𝗻 𝗔𝘁𝘁𝗲𝗻𝘁𝗲 ⚠️"))
+                if (message.Contains("𝗢𝗿𝗱𝗿𝗲 𝗲𝗻 𝗔𝘁𝘁𝗲𝗻𝘁𝗲") || message.Contains("Ordre en Attente"))
                 {
-                    if(message.Contains("📉 Vente ➡️"))
+                    if(message.ToLower().Contains("vente"))
                     {
-                        message = message.Replace("📉 Vente ➡️", "📉 Sell limit ➡️");
+                        message = message.Replace("Vente", "Sell limit");
+                        message = message.Replace("vente", "Sell limit");
                     }
-                    if (message.Contains("📈 Achat ➡️"))
+                    if (message.ToLower().Contains("achat"))
                     {
-                        message = message.Replace("📈 Achat ➡️", "📈 Buy limit ➡️");
-                    }
+                        message = message.Replace("Achat", "Buy limit");
+                        message = message.Replace("achat", "Buy limit");
+                    }                    
                 }
             }
 
