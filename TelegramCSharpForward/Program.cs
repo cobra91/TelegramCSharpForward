@@ -49,12 +49,16 @@ namespace TelegramCSharpForward
 
         static async Task Main()
         {
+            if(Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\TLSharp"))
+            {
+                Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\TLSharp");
+            }
             Console.WriteLine("Load variable from app.config");
             GatherTestConfiguration();
             Console.WriteLine("Variable from app.config loaded");
             Client = new TelegramClient(ApiId, ApiHash, FileSessionStore, SessionName);
             await Connect(Client);
-            TLAbsDialogs = await Client.GetUserDialogsAsync();
+            TLAbsDialogs = await Client.GetUserDialogsAsync() as TLDialogs;
             ListChannel(TLAbsDialogs);
             ChooseChannel();
             Timer myTimer = new Timer(TimerIntervalInMs);
