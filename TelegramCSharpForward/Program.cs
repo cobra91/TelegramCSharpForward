@@ -355,9 +355,11 @@ namespace TelegramCSharpForward
             {
                 message = message.Replace("🅂🄻", "SL");
                 message = message.Replace("✅ 𝗧𝗣", "✅ TP");
+                message = message.Replace("DowJones30", "dj30");
                 if (message.Contains("𝗢𝗿𝗱𝗿𝗲 𝗲𝗻 𝗔𝘁𝘁𝗲𝗻𝘁𝗲") || message.Contains("Ordre en Attente"))
                 {
-                    if(message.ToLower().Contains("vente"))
+                    message = message.Replace("💶 🄿🅁🄸🅇 : ", "@");
+                    if (message.ToLower().Contains("vente"))
                     {
                         message = message.Replace("Vente", "Sell limit");
                         message = message.Replace("vente", "Sell limit");
