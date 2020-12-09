@@ -621,16 +621,17 @@ namespace TelegramCSharpForward
                     TLMessage tLMessage = (TLMessage)historyFromSourceCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Id == tLAbsMessage.ReplyToMsgId);
                     if (tLMessage != null)
                     {
+                        tLMessage.Message = FilterMessage(CalculOffset(tLMessage.Message));
                         Console.WriteLine($"REPLY {tLMessage.Message}\n{tLAbsMessage.Message}");
                         TLChannelMessages historyFromMyNewCanal = (TLChannelMessages)await Client.GetHistoryAsync(new TLInputPeerChannel() { ChannelId = MyChanId, AccessHash = AccessHash });
                         List<TLAbsMessage> tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message == tLMessage.Message).ToList();
                         if (tLAbsMessages.Count == 0)
                         {
-                            tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message == CalculOffset(FilterMessage(tLMessage.Message))).ToList();
+                            tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message == tLMessage.Message).ToList();
                         }
                         if (tLAbsMessages.Count == 0)
                         {
-                            tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(CalculOffset(FilterMessage(tLMessage.Message)))).ToList();
+                            tLAbsMessages = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message.Contains(tLMessage.Message)).ToList();
                         }
                         if (tLAbsMessages.Count == 0)
                         {
@@ -646,7 +647,7 @@ namespace TelegramCSharpForward
                             }
                             else
                             {
-                                tLMessageList = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message == CalculOffset(FilterMessage(tLMessage.Message))).Cast<TLMessage>().ToList();
+                                tLMessageList = historyFromMyNewCanal.Messages.ToList().Where(x => x is TLMessage tL && tL.Message == tLMessage.Message).Cast<TLMessage>().ToList();
                                 if (tLMessageList.Count > 0)
                                 {
                                     maxId = tLMessageList.Max(y => y.Id);
@@ -688,11 +689,11 @@ namespace TelegramCSharpForward
                             TLMessage tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message == tLMessage.Message);
                             if (tLMessageInNewchan == null)
                             {
-                                tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message == CalculOffset(FilterMessage(tLMessage.Message)));
+                                tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message == tLMessage.Message);
                             }
                             if (tLMessageInNewchan == null)
                             {
-                                tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message.Contains(CalculOffset(FilterMessage(tLMessage.Message))));
+                                tLMessageInNewchan = (TLMessage)historyFromMyNewCanal.Messages.ToList().FirstOrDefault(x => x is TLMessage tL && tL.Message.Contains(tLMessage.Message));
                             }
                             if (tLMessageInNewchan != null)
                             {
