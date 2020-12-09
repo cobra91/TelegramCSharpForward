@@ -220,11 +220,11 @@ namespace TelegramCSharpForward
                 Console.WriteLine(cpt + ") " + channel.Value[0]);
                 cpt++;
             }
-            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 7,9, 23 and 31)");
+            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 5,9,18,22 and 27)");
             string input = Console.ReadLine();
             if (input == "")
             {
-                input = "7,9,23,31";
+                input = "5,9,18,22,27";
             }
             Dictionary<int, List<object>> channelIdToKeep = new Dictionary<int, List<object>>();
             foreach (string chanId in input.Split(','))
