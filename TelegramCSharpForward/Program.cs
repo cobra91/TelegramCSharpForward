@@ -121,6 +121,36 @@ namespace TelegramCSharpForward
             {
                 MyChanId = int.Parse(myChanId);
             }
+
+            string dowJonesOffset = ConfigurationManager.AppSettings["DowJonesOffset"];
+            if (string.IsNullOrEmpty(dowJonesOffset))
+            {
+                Debug.WriteLine(appConfigMsgWarning, nameof(dowJonesOffset));
+            }
+            else
+            {
+                DowJonesOffset = double.Parse(dowJonesOffset);
+            }
+
+            string daxOffset = ConfigurationManager.AppSettings["DaxOffset"];
+            if (string.IsNullOrEmpty(daxOffset))
+            {
+                Debug.WriteLine(appConfigMsgWarning, nameof(daxOffset));
+            }
+            else
+            {
+                DaxOffset = double.Parse(daxOffset);
+            }
+
+            string nasdaqOffset = ConfigurationManager.AppSettings["NasdaqOffset"];
+            if (string.IsNullOrEmpty(nasdaqOffset))
+            {
+                Debug.WriteLine(appConfigMsgWarning, nameof(nasdaqOffset));
+            }
+            else
+            {
+                NasdaqOffset = double.Parse(nasdaqOffset);
+            }
         }
 
         static async Task Connect(TelegramClient client)
