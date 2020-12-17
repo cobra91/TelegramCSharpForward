@@ -194,7 +194,6 @@ namespace TelegramCSharpForward
         static void ListChannel(TLAbsDialogs tLAbsDialogs)
         {
             // List all channel and store ID, channelTitle and AccessHash
-            Console.WriteLine("List all channel and store ID, channelTitle and AccessHash");
             if (tLAbsDialogs is TLDialogsSlice slice)
             {
                 foreach (TLAbsChat tLAbsChat in slice.Chats.Where(x => x is TLChannel channel))
@@ -250,11 +249,11 @@ namespace TelegramCSharpForward
                 Console.WriteLine(cpt + ") " + channel.Value[0]);
                 cpt++;
             }
-            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 5,9,18,22 and 27)");
+            Console.WriteLine("Type each channel number you want to transfer separate by comma (or type Enter to take 8,19,23 and 30)");
             string input = Console.ReadLine();
             if (input == "")
             {
-                input = "5,9,18,22,27";
+                input = "8,19,23,30";
             }
             Dictionary<int, List<object>> channelIdToKeep = new Dictionary<int, List<object>>();
             foreach (string chanId in input.Split(','))
@@ -478,7 +477,8 @@ namespace TelegramCSharpForward
                 "pips en cours ✅♻️",
                 "décalez",
                 "annulez",
-                "mettez le sl"
+                "mettez le sl",
+                "pips actuellement ⏳"
             };
 
             if (message.ToLower().Contains("http"))
