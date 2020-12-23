@@ -478,7 +478,11 @@ namespace TelegramCSharpForward
                 "décalez",
                 "annulez",
                 "mettez le sl",
-                "pips actuellement ⏳"
+                "pips actuellement ⏳",
+                "move stop loss to",
+                "small accounts can quit",
+                "running +",
+                "All signals from today in profits"
             };
 
             if (message.ToLower().Contains("http"))
@@ -548,6 +552,30 @@ namespace TelegramCSharpForward
                     {
                         message = message.Replace("Mettez le SL", "Modifier SL");
                     }
+                    if (message.ToLower().Contains("you can close some profits now"))
+                    {
+                        message = message.Replace("You can close some profits now", "Vous pouvez prendre quelques profits maintenant via une cloture partiel si vous le souhaitez");
+                    }
+                    if (message.ToLower().Contains("move stop loss to"))
+                    {
+                        message = message.Replace("move stop loss to", "modifier SL");
+                    }
+                    if (message.ToLower().Contains("small accounts can quit"))
+                    {
+                        message = message.Replace("Small accounts can quit", "Les petit compte peuvent quitter");
+                    }
+                    if (message.ToLower().Contains("running +"))
+                    {
+                        message = message.Replace("running +", "en cours +");
+                    }         
+                    if(message.ToLower().Contains("all signals from today in profits"))
+                    {
+                        message = message.Replace("All signals from today in profits", "Tous les signaux depuis aujourd'hui sont en profits !");
+                    }
+                    if (message.ToLower().Contains("if you risk too much of your account you can close now"))
+                    {
+                        message = message.Replace("If you risk too much of your account you can close now", "Si vous risquez trop de votre compte, vous pouvez quitter maintenant !");
+                    }                    
                     return message;
                 }
             }
