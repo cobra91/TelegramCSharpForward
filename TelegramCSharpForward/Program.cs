@@ -482,7 +482,8 @@ namespace TelegramCSharpForward
                 "move stop loss to",
                 "small accounts can quit",
                 "running +",
-                "All signals from today in profits"
+                "all signals from today in profits",
+                "you can close"
             };
 
             if (message.ToLower().Contains("http"))
@@ -575,7 +576,15 @@ namespace TelegramCSharpForward
                     if (message.ToLower().Contains("if you risk too much of your account you can close now"))
                     {
                         message = message.Replace("If you risk too much of your account you can close now", "Si vous risquez trop de votre compte, vous pouvez quitter maintenant !");
+                    }
+                    if (message.ToLower().Contains("can go on drowdown before Take profit.If you dont want to wait this trade you can close now on Entry"))
+                    {
+                        message = message.Replace("can go on drowdown before Take profit.If you dont want to wait this trade you can close now on Entry", "peut aller en latent négatif avant le TP.Si vous ne voulez pas attendre cette transition, vous pouvez fermer maintenant au point d'entrée");
                     }                    
+                    if (message.ToLower().Contains("you can close"))
+                    {
+                        message = message.Replace("you can close", "vous pouvez quitter");
+                    }
                     return message;
                 }
             }
